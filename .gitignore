@@ -1,0 +1,10 @@
+tools/__pycache__/env.cpython-310.pyc
+tools/env.py
+tools/__pycache__/env.cpython-39.pyc
+__pycache__/
+**/__pycache__/
+*.pycharm.*
+test/
+.vscode/
+.idea/
+/.env

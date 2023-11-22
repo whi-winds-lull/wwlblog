@@ -1,0 +1,146 @@
+#[Info]
+site_name: Wblog
+site_description: 个人分享、记录
+site_url: https://whi-winds-lull.github.io/wwlblog
+repo_url: https://github.com/whi-winds-lull/wwlblog
+repo_name: whi-winds-lull
+edit_uri: edit/main/docs/
+site_author: wwl #作者名
+
+#[UI]
+theme:
+  name: material
+  custom_dir: docs/overrides
+  font:
+    text: "Noto Sans SC - local"
+  palette:
+    - media: "(prefers-color-scheme: light)" # 检查用户系统配置是否为亮色
+      scheme: default # 亮色模式
+      primary: blue # 基本颜色顶部颜色
+      accent: indigo # 按钮等互动块的颜色
+      toggle:
+        icon: material/weather-night # 图标
+        name: 切换至夜间模式 # 鼠标悬浮提示
+    - media: "(prefers-color-scheme: dark)" # 检查用户系统配置是否为暗色
+      scheme: slate # 暗色模式
+      primary: black # 基本颜色
+      accent: indigo # 按钮等互动块的颜色
+      toggle:
+        icon: material/weather-sunny
+        name: 切换至日间模式
+  language: zh
+  logo: assets/images/favicon.png
+  favicon: assets/images/favicon.png
+  features:
+    - content.code.copy # 代码块复制按钮
+    - content.action.edit # 文章编辑按钮
+    #- navigation.instant # Instant loading，像个单页应用
+    - navigation.tracking # Anchor tracking
+    - navigation.tabs # 导航栏
+    - navigation.footer # 上一篇 / 下一篇导航按钮
+    #- navigation.tabs.sticky # 导航栏不随页面滚动隐藏
+    - navigation.sections # 侧边栏分组显示
+    #- navigation.expand # 导航栏自动展开
+    - navigation.indexes # 组标题有专属页面
+    - toc.follow # 目录自动跟随
+    - navigation.top # 返回顶部按钮
+    - search.suggest # 搜索推荐
+    - search.share   #搜索分享按钮
+    #- navigation.prune # 导航修剪，仅渲染可见链接，优化文档数量超过100的站点（实验），会导致页面间跳转速度变慢
+    #- search.highlight
+  icon:
+    repo: material/github
+    edit: material/pencil
+
+plugins:
+  - blog:
+      archive: false
+      authors: false
+  #      authors_file: "{blog}/.authors.yml"
+  - search:
+      separator: '[\s\u200b\-]'
+
+
+markdown_extensions:
+  - abbr
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - md_in_html
+  - pymdownx.arithmatex: # latex支持
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.highlight: # 代码块高亮
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.superfences # 代码块高亮插件
+  - meta # 支持Markdown文件上方自定义标题标签等
+
+#extra_javascript:
+#  - javascripts/extra.js
+#  - javascripts/mathjax.js
+#  - https://polyfill.io/v3/polyfill.min.js?features=es6
+#  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+extra_css:
+  - css/custom.css
+
+#############################################################
+#############################################################
+#############################################################
+
+# [Navigtion]
+nav:
+  - 主页:
+      - index.md
+  - 开发:
+      - bigdata/python.md
+      - bigdata/hudi.md
+      - bigdata/git.md
+      - bigdata/pyspark.md
+      - bigdata/spark.md
+      - bigdata/kafka.md
+      - bigdata/es.md
+      - bigdata/大数据框架命令.md
+      - bigdata/Linux系统安装Python3环境.md
+      - bigdata/pg安装总结.md
+      - bigdata/curl源码安装报错解决.md
+      - bigdata/FLINK监控.md
+      - bigdata/SSH免密.md
+      - bigdata/数据挖掘.md
+      - bigdata/服务器升级.md
+      - bigdata/监控预警.md
+      - bigdata/Hudi合并小文件方案.md
+      - 分享:
+          - share/recommend.md
+  - 心情:
+      - blog/index.md
+
+
+copyright: Copyright &copy; 2023 wwl # 左下角的版权声明
+extra:
+  generator: false  #删除页脚显示“使用 MkDocs 材料制造”
+  social:
+    #    - icon: fontawesome/brands/twitter
+    #      link: https://twitter.com/wcowin_
+    - icon: fontawesome/brands/github
+      link: https://github.com/Klring/wwlblog
+    #    - icon: fontawesome/brands/bilibili
+    #      link: https://space.bilibili.com/1407028951?spm_id_from=333.1007.0.0
+    - icon: fontawesome/solid/paper-plane
+      link: UID:1477654456 #联系方式
+  chatbot_id: !ENV MKDOCS_CHATBOT_ID
+  analytics:
+    provider: google
+    property: !ENV ANALYTICS_GOOGLE_ID
