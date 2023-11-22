@@ -109,7 +109,6 @@ nav:
       - bigdata/hudi.md
       - bigdata/git.md
       - bigdata/pyspark.md
-      - bigdata/spark.md
       - bigdata/kafka.md
       - bigdata/es.md
       - bigdata/大数据框架命令.md
@@ -120,7 +119,6 @@ nav:
       - bigdata/SSH免密.md
       - bigdata/数据挖掘.md
       - bigdata/服务器升级.md
-      - bigdata/监控预警.md
       - bigdata/Hudi合并小文件方案.md
       - 分享:
           - share/recommend.md
