@@ -106,9 +106,11 @@ nav:
       - index.md
   - 开发:
       - bigdata/python.md
+      - bigdata/flink.md
       - bigdata/hudi.md
       - bigdata/git.md
       - bigdata/pyspark.md
+      - bigdata/pandas vs pyspark.md
       - bigdata/kafka.md
       - bigdata/es.md
       - bigdata/大数据框架命令.md
