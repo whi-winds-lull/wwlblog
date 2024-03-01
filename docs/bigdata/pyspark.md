@@ -115,6 +115,28 @@ spark.sparkContext.parallelize([1, 2, 3]).foreach(lambda x: accumulator.add(x))
 print(accumulator.value)
 ```
 
+## 一些优化策略
+
+### 遍历DataFrame的优化
+```python
+import functools
+from pyspark.sql import DataFrame
+
+paths = get_file_paths()
+
+# BAD: For loop
+for path in paths:
+  df = spark.read.load(path)
+  df = fancy_transformations(df)
+  df.write.mode("append").saveAsTable("xyz")
+
+# GOOD: functools.reduce
+lazily_evaluated_reads = [spark.read.load(path) for path in paths]
+lazily_evaluted_transforms = [fancy_transformations(df) for df in lazily_evaluated_reads]
+unioned_df = functools.reduce(DataFrame.union, lazily_evaluted_transforms)
+unioned_df.write.mode("append").saveAsTable("xyz")
+```
+
 ## spark常见问题：
 ### 问题一：
 日志中出现：org.apache.spark.shuffle.MetadataFetchFailedException: Missing an output location for shuffle 0
@@ -247,3 +269,22 @@ scala版本不一致
 
 解决方案：
 更换 服务scala版本一致的镜像
+
+### 问题十六： : java.lang.StackOverflowError at org.codehaus.janino.CodeContext.extract16BitValue(CodeContext.java:763) at org.codehaus.janino.CodeContext.flowAnalysis(CodeContext.java:600)
+原因分析：
+jvm堆栈溢出，一般来说，出现这个错误有可能是因为代码中出现了递归查询，但是在我的例子中，出现这个问题的原因是我使用for 循环 union了56个df
+
+解决方案是：
+spark.driver.extraJavaOptions
+spark.executor.extraJavaOptions
+
+有关与这两个参数的用法可参考：
+https://tsaiprabhanj.medium.com/spark-extrajavaoptions-2d8799ff9181
+
+### 问题十七：  ERROR CodeGenerator: failed to compile: org.codehaus.janino.InternalCompilerException: Compiling "GeneratedClass" in "generated.java": Code of method "processNext()V" of class "org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1" grows beyond 64 KB
+原因分析：
+此问题伴随着问题十六一起出现，原因在于使用Catalyst从使用DataFrame和Dataset的程序生成Java程序编译成Java字节码时，一个方法的字节码大小不能超过64 KB，这与Java类文件的限制相冲突。
+
+解决方案为：
+spark.sql.codegen.wholeStage= "false"
+来源与：https://stackoverflow.com/questions/50891509/apache-spark-codegen-stage-grows-beyond-64-kb
