@@ -293,3 +293,16 @@ POST my-index-000001/_analyze
   "text": "2 Quick Foxes."
 }
 ```
+
+### 对text类型数据进行全匹配
+在建索引的时候使用"fields": {"keyword": {"type": "keyword"}}
+```
+GET /xxx/_search
+{
+  "query": {
+    "term": {
+      "xx.keyword": "士多"
+    }
+  }
+}
+```
