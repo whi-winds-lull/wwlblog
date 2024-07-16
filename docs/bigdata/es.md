@@ -306,3 +306,38 @@ GET /xxx/_search
   }
 }
 ```
+
+### template的使用
+_template 是用来定义索引模板的工具。索引模板可以帮助你在创建索引时自动应用一些配置，比如映射（mappings）、设置（settings）和别名（aliases），从而简化和规范索引的创建过程。  
+```
+# 创建模板
+PUT _template/my_template
+{
+  "index_patterns": ["test-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "timestamp": {
+        "type": "date"
+      },
+      "message": {
+        "type": "text"
+      },
+      "user_id": {
+        "type": "keyword"
+      }
+    }
+  },
+  "aliases": {
+    "logs_alias": {}
+  }
+}
+
+# 创建索引
+PUT test-2024-07-16
+# 查看
+GET test-2024-07-16/_mapping
+```
