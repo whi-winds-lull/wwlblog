@@ -137,7 +137,109 @@ unioned_df = functools.reduce(DataFrame.union, lazily_evaluted_transforms)
 unioned_df.write.mode("append").saveAsTable("xyz")
 ```
 
-### spark常见问题：
+## 启动参数
+
+### archives 
+在 Spark 中，--archives 是一个用于指定需要分发到所有工作节点的归档文件（如 .zip、.tar.gz 等）的命令参数。通过 --archives 参数，你可以将这些归档文件解压并分发到每个执行器节点中，供作业使用。  
+#### 作用：
+- 分发文件：将指定的归档文件分发到集群的所有工作节点。
+- 解压归档文件：这些归档文件会被自动解压到执行器的工作目录中，供作业使用。
+#### 使用场景：
+- 依赖包或资源：如果你的 Spark 作业依赖一些外部库或者资源文件，这些库或者资源文件可以打包成归档文件，通过 --archives 选项分发和解压到每个工作节点上。
+- 运行环境：如果你需要在每个节点上配置特定的运行环境（例如 Python 虚拟环境），可以将这些环境打包成归档文件，通过 --archives 分发到每个节点。
+#### 示例：
+如果你使用 Conda 创建了一个虚拟环境，并希望在 Spark 集群上分发并使用该环境
+```shell
+# 创建环境
+conda create -n pyspark_env_3.10 python=3.10 pyspark
+# 打包环境
+conda pack -n pyspark_env_3.10 -o pyspark_env_3.10.tar.gz
+遇到报错：
+CondaPackError: 
+Files managed by conda were found to have been deleted/overwritten in the
+following packages:
+
+- pip 24.2:
+    lib/python3.1/site-packages/pip-24.2.dist-info/AUTHORS.txt
+    lib/python3.1/site-packages/pip-24.2.dist-info/INSTALLER
+    lib/python3.1/site-packages/pip-24.2.dist-info/LICENSE.txt
+    + 437 others
+- pyspark 3.5.1:
+    lib/python3.1/site-packages/pyspark-3.5.1.dist-info/INSTALLER
+    lib/python3.1/site-packages/pyspark-3.5.1.dist-info/METADATA
+    lib/python3.1/site-packages/pyspark-3.5.1.dist-info/RECORD
+    + 765 others
+- pytz 2024.1:
+    lib/python3.1/site-packages/pytz-2024.1.dist-info/INSTALLER
+    lib/python3.1/site-packages/pytz-2024.1.dist-info/LICENSE.txt
+    lib/python3.1/site-packages/pytz-2024.1.dist-info/METADATA
+    + 615 others
+- python-dateutil 2.9.0:
+    lib/python3.1/site-packages/dateutil/__init__.py
+    lib/python3.1/site-packages/dateutil/_common.py
+    lib/python3.1/site-packages/dateutil/_version.py
+    + 25 others
+- python-tzdata 2024.1:
+    lib/python3.1/site-packages/tzdata-2024.1.dist-info/INSTALLER
+    lib/python3.1/site-packages/tzdata-2024.1.dist-info/LICENSE
+    lib/python3.1/site-packages/tzdata-2024.1.dist-info/LICENSE_APACHE
+    + 632 others
+- six 1.16.0:
+    lib/python3.1/site-packages/six-1.16.0.dist-info/INSTALLER
+    lib/python3.1/site-packages/six-1.16.0.dist-info/LICENSE
+    lib/python3.1/site-packages/six-1.16.0.dist-info/METADATA
+    + 6 others
+- setuptools 72.1.0:
+    lib/python3.1/site-packages/_distutils_hack/__init__.py
+    lib/python3.1/site-packages/_distutils_hack/override.py
+    lib/python3.1/site-packages/distutils-precedence.pth
+    + 589 others
+- py4j 0.10.9.7:
+    lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/INSTALLER
+    lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/LICENSE.txt
+    lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/METADATA
+    + 38 others
+- wheel 0.44.0:
+    lib/python3.1/site-packages/wheel-0.44.0.dist-info/LICENSE.txt
+    lib/python3.1/site-packages/wheel-0.44.0.dist-info/METADATA
+    lib/python3.1/site-packages/wheel-0.44.0.dist-info/RECORD
+    + 31 others
+根据：https://stackoverflow.com/questions/69992742/conda-pack-condapackerror-files-managed-by-conda-were
+错误原因可能是因为：镜像试图使用python3.10，而conda-pack将其解析为python3.1。而conda-pack0.7以上版本已经解决了这个bug
+# 安装conda-pack0.7以上版本，这里是0.8
+conda install conda-pack
+# 使用conda-pack
+conda-pack -n pyspark_env_3.10 -o pyspark_env_3.10.tar.gz
+
+# 运行spark
+spark-submit \
+   --archives pyspark_env_3.10.tar.gz#pyspark_env \
+   --master yarn \
+   --deploy-mode client \
+   --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./pyspark_env/bin/python \
+   --conf spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON=./pyspark_env/bin/python \
+   --executor-memory 4G \
+   --executor-cores 2 \
+   --num-executors 6 \
+   --queue spark \
+   spark-3.2.1/job/read_hudi.py
+
+# 也可上传hdfs
+hadoop fs -put pyspark_env_3.10.tar.gz /spark-jobs/jar
+
+spark-submit \
+    --archives hdfs:///spark-jobs/jar/pyspark_env_3.10.tar.gz#pyspark_env \
+   --master yarn \
+   --deploy-mode client \
+   --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./pyspark_env/bin/python \
+   --conf spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON=./pyspark_env/bin/python \
+   --executor-memory 4G \
+   --executor-cores 2 \
+   --num-executors 6 \
+   --queue spark \
+   spark-3.2.1/job/read_hudi.py
+```
+## spark常见问题：
 #### 问题一：
 日志中出现：org.apache.spark.shuffle.MetadataFetchFailedException: Missing an output location for shuffle 0  
 原因分析：  
