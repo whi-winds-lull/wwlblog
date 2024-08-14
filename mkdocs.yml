@@ -122,6 +122,7 @@ nav:
       - bigdata/数据挖掘.md
       - bigdata/服务器升级.md
       - bigdata/Hudi合并小文件方案.md
+      - bigdata/clickhouse.md
       - 分享:
           - share/recommend.md
   - 心情:
