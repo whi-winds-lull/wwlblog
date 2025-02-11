@@ -137,6 +137,27 @@ unioned_df = functools.reduce(DataFrame.union, lazily_evaluted_transforms)
 unioned_df.write.mode("append").saveAsTable("xyz")
 ```
 
+### 读取文件
+读取文件时,比如Parquet、JSON和ORC，hudi使用Parquet格式，理论上也适用，假设要读取10GB的数据，可使用以下计算要使用的资源：  
+spark默认读取单个分区的大小为128Mb，取决于：  
+- spark.sql.files.maxPartitionBytes:  
+用途: 这个参数用于控制 Spark SQL 在读取文件时，单个分区中最多可以包含的字节数。
+默认值: 默认值为 128MB。
+适用场景: 当 Spark 使用 SparkSession 读取文件数据源（如 Parquet、ORC、CSV 等）时，该参数会决定每个分区所读取的数据量。此参数对 Spark SQL 及 DataFrame API 相关的操作生效。
+影响: 如果文件很大，那么 Spark 会将文件分成多个分区，每个分区最多会读取 spark.sql.files.maxPartitionBytes 大小的数据。这有助于避免单个分区数据过大，从而导致内存溢出。
+- spark.files.maxPartitionBytes:  
+用途: 这个参数用于控制 Spark Core 在处理文件时，单个分区的最大字节数。
+默认值: 这个参数默认值没有硬性规定，但如果使用的话，通常与 spark.sql.files.maxPartitionBytes 类似。
+适用场景: 这个参数主要应用于 Spark Core 中，当你使用 sc.textFile 或其他文件读取操作时，控制每个分区的数据量。
+影响: 类似于 spark.sql.files.maxPartitionBytes，但作用范围更广，适用于所有使用 Spark Core 直接读取文件的操作。  
+
+计算如下：  
+10GB = 10 * 1024Mb = 10240  
+分区数 = 10240 / 128 = 80  
+一般，建议一个执行器中有2-5个执行器核心，如果我们取一个执行器中的执行器核心数=4，那么执行器总数= 80/4 = 20  
+默认情况下，执行器核心的总内存应为默认分区内存的4倍,即4 * 128Mb = 512Mb，因此，执行器总内存 = 核心数*512 = 4*512 = 2GB  
+所以，读取10Gb的数据，理论上要达到最大并行，需要20个executors， 2Gb的executors memory
+
 ## 启动参数
 
 ### archives 
@@ -371,7 +392,9 @@ scala版本不一致
 
 #### 问题十六： : java.lang.StackOverflowError at org.codehaus.janino.CodeContext.extract16BitValue(CodeContext.java:763) at org.codehaus.janino.CodeContext.flowAnalysis(CodeContext.java:600)
 原因分析：  
-jvm堆栈溢出，一般来说，出现这个错误有可能是因为代码中出现了递归查询或者执行计划DAG太大了，在我的例子中，出现这个问题的原因是我使用for 循环 union了56个df，并且我的sql中有很多like语句，这导致了我的执行计划非常大。
+jvm堆栈溢出，一般来说，出现这个错误有可能是因为代码中出现了递归查询或者执行计划DAG太大了，在我的例子中，出现这个问题的原因是我使用for 循环 union了56个df，并且我的sql中有很多like语句的or语句（or的处理是递归，or非常多时，会发生大量的递归），这导致了我的执行计划非常大。
+ 当SparkSQL的sql语句有成百上千的or关键字时，就可能会出现Driver端的JVM栈内存溢出。
+通常的处理方式是将一条sql语句拆分为多条sql语句来执行，每条sql语句尽量保证100个以内的子句，一条sql语句的or关键字控制在100个以内，通常不会导致JVM栈内存溢出。
 
 解决方案是： 
 1.
@@ -380,6 +403,7 @@ spark.executor.extraJavaOptions
 
 有关与这两个参数的用法可参考：  
 https://tsaiprabhanj.medium.com/spark-extrajavaoptions-2d8799ff9181
+
 
 2.   
 根据文章：
@@ -451,6 +475,8 @@ train_df.show(n=3, truncate=False, vertical=True)
 ```python
 train_df = spark.createDataFrame(train_df.rdd, schema=train_df.schema)
 ```
+
+
 #### 问题十七：  ERROR CodeGenerator: failed to compile: org.codehaus.janino.InternalCompilerException: Compiling "GeneratedClass" in "generated.java": Code of method "processNext()V" of class "org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1" grows beyond 64 KB
 原因分析：  
 此问题伴随着问题十六一起出现，原因在于使用Catalyst从使用DataFrame和Dataset的程序生成Java程序编译成Java字节码时，一个方法的字节码大小不能超过64 KB，这与Java类文件的限制相冲突。  
