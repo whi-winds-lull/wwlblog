@@ -23,3 +23,6 @@ jobs:
           MKDOCS_CHATBOT_ID: ${{ secrets.CHATBOT_ID }}
           ANALYTICS_GOOGLE_ID: ${{ secrets.ANALYTICS_GOOGLE_ID }}
         run: mkdocs gh-deploy --force
+
+      - name: Deploy to GitHub Pages
+        run: echo 'www.blog.celestialcode.us.kg' > CNAME
