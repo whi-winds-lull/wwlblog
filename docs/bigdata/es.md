@@ -78,7 +78,116 @@ GET /xxx/_search
   }
 }
 ```
+### fuzzy 查询的常见参数
+1. value（必填）
 
+- 用于指定要进行模糊匹配的值，通常是你要查找的单词或短语。  
+- 例如，"value": "searh" 进行对 search 的模糊查询。
+2. fuzziness（可选）  
+- 控制编辑距离，即允许多少个字符插入、删除或替换。可以是：  
+数字（例如：fuzziness: 2）：指定最大允许的编辑距离。  
+AUTO：基于搜索词的长度自动计算允许的编辑距离。通常短词（如2个字母）使用较小的距离，而较长的词则允许更大的编辑距离。
+- 例如，"fuzziness": 2 表示允许两个字符的差异。
+3. prefix_length（可选）  
+- 用于定义在开始时不允许有任何变化的字符数。通过这个参数，可以在实际计算模糊查询前忽略文本的前缀部分，优化查询性能。
+- 例如，"prefix_length": 2 表示查询词的前两个字符不会受到模糊化的影响。
+4. max_expansions（可选）  
+- 限制可以生成的模糊变体的最大数量。如果设置了较大的 fuzziness 值，可能会导致查询生成大量变体，max_expansions 可用于控制这一点，避免性能下降。
+- 例如，"max_expansions": 50 表示最多生成50个变体。
+5. transpositions（可选）
+- 是否允许字符位置的交换。默认情况下，字符交换不被认为是有效的变体（即 "ab" 不等于 "ba"）。如果设置为 true，则允许字符位置交换。
+- 例如，"transpositions": true 允许字符交换。
+```json
+POST /your_index/_search
+{
+  "query": {
+    "fuzzy": {
+      "your_field": {
+        "value": "searh",        // 要匹配的词
+        "fuzziness": "AUTO",    // 自动设置模糊度
+        "prefix_length": 2,     // 前2个字符不变
+        "max_expansions": 50   // 允许的最大变体数
+      }
+    }
+  }
+}
+```
+
+### 关于fuzzy查询的疑问
+背景：使用fuzzy查询查询某个店铺时，发现使用**百兴隆**能够查询出**百兴隆超市(天雅居教师小区西)**的数据，但是使用**百兴隆超市**查询不出数据，当前使用的分词器为ik_smart分词器。  
+分析：  
+百兴隆超市(天雅居教师小区西)分词后的结果为：
+```json
+{
+  "tokens": [
+    {
+      "token": "百",
+      "start_offset": 0,
+      "end_offset": 1,
+      "type": "TYPE_CNUM",
+      "position": 0
+    },
+    {
+      "token": "兴隆",
+      "start_offset": 1,
+      "end_offset": 3,
+      "type": "CN_WORD",
+      "position": 1
+    },
+    {
+      "token": "超市",
+      "start_offset": 3,
+      "end_offset": 5,
+      "type": "CN_WORD",
+      "position": 2
+    },
+    {
+      "token": "天",
+      "start_offset": 6,
+      "end_offset": 7,
+      "type": "CN_CHAR",
+      "position": 3
+    },
+    {
+      "token": "雅",
+      "start_offset": 7,
+      "end_offset": 8,
+      "type": "CN_CHAR",
+      "position": 4
+    },
+    {
+      "token": "居",
+      "start_offset": 8,
+      "end_offset": 9,
+      "type": "CN_CHAR",
+      "position": 5
+    },
+    {
+      "token": "教师",
+      "start_offset": 9,
+      "end_offset": 11,
+      "type": "CN_WORD",
+      "position": 6
+    },
+    {
+      "token": "小区",
+      "start_offset": 11,
+      "end_offset": 13,
+      "type": "CN_WORD",
+      "position": 7
+    },
+    {
+      "token": "西",
+      "start_offset": 13,
+      "end_offset": 14,
+      "type": "CN_CHAR",
+      "position": 8
+    }
+  ]
+}
+```
+使用百兴隆查询时，是使用**百兴隆(不分词)**的结果和**百兴隆超市(天雅居教师小区西)**分词后的token进行编辑距离计算的。  
+所以查询**百兴隆**和**兴隆**的编辑距离为1，能够查询出结果，而使用**百兴隆超市**查询时，无论是**兴隆**或者是**超市**的编辑距离都大于2(可设置的最大距离)，所以查询不出结果。
 ## wildcard查询
 支持通配符匹配。
 ```
