@@ -1,0 +1,56 @@
+{#-
+This file was automatically generated - do not edit
+-#}
+{% extends "main.html" %}
+{% block tabs %}
+{{ super() }}
+<style>.md-header {
+    position: initial
+}
+
+.md-main__inner {
+    margin: 0
+}
+
+.md-content {
+    display: none
+}
+
+@media screen and (min-width: 60em) {
+    .md-sidebar--secondary {
+        display: none
+    }
+}
+
+@media screen and (min-width: 76.25em) {
+    .md-sidebar--primary {
+        display: none
+    }
+}</style>
+<section class="mdx-container">
+    <div class="md-grid md-typeset">
+        <div class="mdx-hero">
+            <!--            <div class="mdx-hero__image">-->
+            <!--                <img src="assets/images/2212.jpg" alt="" width="1659" height="1200" draggable="false">-->
+            <!--            </div>-->
+            <div class="mdx-hero__content">
+                <h1> Whispering Winds Lull </h1>
+                <p> 欢迎来到我的个人博客！这里是我分享思考、经验和兴趣的地方，一个我们可以一同探讨、学习和共享的虚拟空间。无论您是因为追求知识，寻找灵感，还是只是纯粹的好奇，我希望这个博客能成为您的理想去处。
+
+                    在这里，我将与您分享我的见解、故事、生活中的点滴，以及我所热爱的主题。
+
+                    无论您是偶然经过，还是常驻访客，我都感到非常荣幸。感谢您的光临，我期待在这个数字世界中与您分享精彩的旅程。</p>
+                <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | e }}"
+                   class="md-button md-button--primary">
+                    技术
+                </a>
+                <a href="{{ 'blog/' | url }}" title="blog" class="md-button">
+                    博客
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block content %}{% endblock %}
+{% block footer %}{% endblock %}
