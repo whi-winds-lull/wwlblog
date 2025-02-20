@@ -1,4 +1,4 @@
-## python
+## Python
 
 ##### 生成式（推导式）的用法
 
@@ -17,7 +17,7 @@ prices2 = {key: value for key, value in prices.items() if value > 100}
 print(prices2)
 ```
 
-##### 后台执行的方法
+##### 后台执行
 
 ```shell
 nohup python3 main.py >/dev/null 2>&1 &
@@ -25,7 +25,8 @@ nohup python3 main.py >./log/runtime_`date +%Y-%m-%d-%H-%M-%S`.out 2>&1 &
 ```
 
 ##### 命名规范
-![](../assets/python命名.png)
+
+![python命名](C:\Users\Administrator\Desktop\文档\Python.assets\python命名.png)
 
 **文件名**
 
@@ -135,19 +136,17 @@ def __message__(self, msgid):
 
 module_name, package_name, ClassName, method_name, ExceptionName, function_name, GLOBAL_VAR_NAME, instance_var_name, function_parameter_name, local_var_name.
 
+![image-20220429142232028](C:\Users\Administrator\Desktop\文档\Python.assets\image-20220429142232028.png)
 
-
-**字典的合并**
+**字典的合并**  
 
 info_1 = {"apple": 13, "orange": 22}
 info_2 = {"爆款写作": 48, "跃迁": 49}
-##### 一行代码搞定合并两个字典
+##### 一行代码搞定合并两个字典  
 new_info = {**info_1, **info_2}
 print(new_info)
 输出：
 {'apple': 13, 'orange': 22, '爆款写作': 48, '跃迁': 49}
-
-
 
 ##### Numpy
 
@@ -389,6 +388,359 @@ print(a2[:,1])
 print(a2[:,[1,3]])
 ```
 
+###### 5.类方法（`classmethod`）和静态方法（`staticmethod`）
+
+类方法（Class Method）
+定义
+类方法使用 @classmethod 装饰器来定义。它的第一个参数是类本身（通常命名为 cls）。
+
+特点
+绑定到类：类方法绑定到类，而不是类的实例。
+访问类属性和方法：类方法可以访问和修改类的状态（类属性和类方法）。
+支持继承：类方法可以在子类中重载，实现多态行为。
+用法
+类方法通常用于需要在类级别进行操作的情况，如访问或修改类属性，或创建类的实例（工厂方法）。
+
+```pytho
+class MyClass:
+    class_variable = 'Hello, World!'
+
+    @classmethod
+    def get_class_variable(cls):
+        return cls.class_variable
+
+# 调用类方法
+print(MyClass.get_class_variable())  # 输出：Hello, World!
+
+# 通过实例调用
+instance = MyClass()
+print(instance.get_class_variable())  # 输出：Hello, World!
+
+```
+
+```python
+from abc import ABC, abstractmethod
+
+# 基类
+class Product(ABC):
+    @abstractmethod
+    def operation(self):
+        pass
+
+# 具体产品A
+class ConcreteProductA(Product):
+    def operation(self):
+        return "Result of ConcreteProductA"
+
+# 具体产品B
+class ConcreteProductB(Product):
+    def operation(self):
+        return "Result of ConcreteProductB"
+
+# 工厂类
+class ProductFactory:
+    @classmethod
+    def create_product(cls, product_type: str) -> Product:
+        if product_type == 'A':
+            return ConcreteProductA()
+        elif product_type == 'B':
+            return ConcreteProductB()
+        else:
+            raise ValueError(f"Unknown product type: {product_type}")
+
+# 使用工厂方法创建产品实例
+if __name__ == "__main__":
+    product_a = ProductFactory.create_product('A')
+    product_b = ProductFactory.create_product('B')
+
+    print(product_a.operation())  # Output: Result of ConcreteProductA
+    print(product_b.operation())  # Output: Result of ConcreteProductB
+
+```
+
+
+
+静态方法（Static Method）
+
+静态方法使用 @staticmethod 装饰器来定义。它不接收特殊的第一个参数（既不接收 self 也不接收 cls）。
+
+特点
+绑定到类：静态方法绑定到类，而不是类的实例。
+不访问类或实例的状态：静态方法不能访问或修改类或实例的状态。
+独立性强：静态方法独立于类和实例，通常用于逻辑上属于类但不依赖于类或实例状态的方法。
+用法:
+**静态方法通常用于工具函数或逻辑上属于类但不依赖于类或实例状态的方法。**
+
+```
+class MathUtils:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+# 调用静态方法
+result = MathUtils.add(5, 7)
+print(result)  # 输出：12
+
+```
+
+| 特点       | 类方法（Class Method）                 | 静态方法（Static Method）                        |
+| ---------- | -------------------------------------- | ------------------------------------------------ |
+| 装饰器     | @classmethod                           | @staticmethod                                    |
+| 第一个参数 | 类本身（`cls`）                        | 无特殊参数                                       |
+| 访问权限   | 可以访问和修改类属性和方法             | 不能访问类或实例属性和方法                       |
+| 绑定       | 绑定到类                               | 绑定到类                                         |
+| 用途       | 需要在类级别进行操作的场景，如工厂方法 | 工具函数或逻辑上属于类但不依赖类或实例状态的方法 |
+
+用法上的不同点
+访问和修改类状态：
+
+类方法可以访问和修改类属性和方法。
+静态方法不能访问类或实例属性和方法，只能访问其自身的参数和局部变量。
+实例化：
+
+类方法常用作工厂方法来创建类实例。
+静态方法一般用于逻辑上属于类的工具函数，不涉及类的实例化。
+继承：
+
+类方法支持继承，并可以在子类中重载，实现多态。
+静态方法不支持继承特性，通常用于不需要依赖于类的继承结构的功能。
+通过上述解释和示例，希望能帮助你理解类方法和静态方法的区别及其用法。
+
+##### **httpx**
+
+httpx是一个异步协程http请求
+
+##### **dataclass**
+
+Python 3.7 中的`dataclasses`模块是一种更有效的方法来存储将在程序的不同部分之间传递的数据
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Employee:
+    id_: int
+    name: str
+    salary: float
+
+    def __repr__(self):
+       return f"{self.name} earns ${self.salary}."
+
+e1 = Employee(id_=1, name='Tusk', salary=69999.99)
+print(e1) # Tusk earns $69999.99.
+```
+
+#####  asyncio和aiohttp
+
+`asyncio` 协程主要使用 `async` 和 `await` 关键字进行定义和调用：
+
+- `async def`：定义一个异步函数（协程）。
+- `await`：在协程中等待一个可等待对象（如另一个协程、Future、Task 等）的完成。
+
+**技巧和注意事项：**
+
+- **事件循环（Event Loop）：** 协程需要运行在事件循环中，`asyncio.run()` 会自动创建一个事件循环并运行。
+- **任务（Task）：** 可以使用 `asyncio.create_task()` 将协程封装成任务，以便更灵活地控制协程的执行。
+- **Future：** Future 对象表示一个异步操作的最终结果。
+- **异步 I/O：** 协程主要用于处理 I/O 密集型任务，如网络请求、文件读写等。使用异步 I/O 可以避免阻塞，提高程序的并发性能。
+- **避免阻塞操作：** 在协程中应避免执行阻塞操作（如 time.sleep()），否则会阻塞整个事件循环。应使用 `asyncio.sleep()` 或其他异步 I/O 操作。
+- **上下文管理：** 可以使用 `async with` 语句进行异步上下文管理，例如异步文件操作、异步锁等。
+
+**协程比多线程快的原因：**
+
+协程的“快”主要体现在以下几个方面：
+
+1. **切换开销小：** 协程的切换由程序自身控制，仅涉及少量寄存器和栈信息的保存和恢复，开销远小于线程切换（需要操作系统内核介入）。
+2. **避免了锁竞争：** 由于协程是单线程的，不存在多个线程同时访问共享资源的情况，因此避免了锁的竞争和死锁等问题，简化了并发编程的复杂性。
+3. **更高效的 I/O 操作：** 协程结合异步 I/O，可以在 I/O 等待期间切换到其他任务执行，最大限度地利用 CPU 资源，提高了 I/O 密集型任务的效率。
+
+###### 1.在windows上使用时，有时会报错遇到`RuntimeError: Event loop is closed`的问题
+
+```
+将asyncio.run(main())改为：
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+原因是： 
+asyncio 对 Windows 的支持本来就不好。Python3.8 后默认 Windows 系统上的事件循环采用 ProactorEventLoop （仅用于 Windows ）这篇文档描述了其在 Windows 下的缺陷：https://docs.python.org/zh-cn/3/library/asyncio-platforms.html#windows
+
+参考：https://www.cnblogs.com/james-wangx/p/16111485.html
+```
+
+###### 2.性能测试
+
+```python
+# -*- encoding: utf-8 -*-
+"""
+@file    :   asyn_aiohttp_demo.py  
+@contact :   wuwenliang@wxchina.com
+@license :   (c)copyright 2018-2023
+ 
+@modify time      @author    @version    @description
+------------      -------    --------    -----------
+2024/12/17 15:46   wwl        1.0         asyn_aiohttp_demo
+"""
+import asyncio
+import time
+
+import aiohttp
+import requests
+
+
+# 同步请求函数
+def fetch2(url):
+    response = requests.get(url)
+    return response.text
+
+
+# 主函数，执行同步请求
+def main2():
+    urls = ["https://jsonplaceholder.typicode.com/posts"] * 100  # 请求的URL
+
+    start_time = time.time()  # 记录开始时间
+    results = [fetch2(url) for url in urls]  # 创建任务列表并同步执行
+    end_time = time.time()  # 记录结束时间
+
+    print(f"同步请求的总时间: {end_time - start_time}秒")
+    return results
+
+
+async def fetch(url, semaphore):
+
+    async with semaphore:
+
+        async with aiohttp.ClientSession() as session:
+
+            async with session.get(url) as response:
+
+                return await response.text()
+
+
+async def main():
+
+    urls = ["https://jsonplaceholder.typicode.com/posts"] * 100
+
+    semaphore = asyncio.Semaphore(100)
+
+    tasks = [fetch(url, semaphore) for url in urls]
+
+    start_time = time.time()  # 记录开始时间
+    results = await asyncio.gather(*tasks)
+    end_time = time.time()  # 记录结束时间
+
+    print(f"100个并发请求的总时间: {end_time - start_time}秒")
+
+    # print(results)
+
+
+if __name__ == "__main__":
+
+    # 协程测试
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+
+    # 同步测试
+    # main2()
+```
+
+结果：
+
+测试请求100条
+
+使用协程，Semaphore=100，耗时：1.899681568145752秒-2秒左右
+
+使用协程，Semaphore=10，耗时：5.349802017211914秒
+
+使用协程，Semaphore=1，耗时：48.74130725860596秒
+
+使用多线程，workers=100，耗时 1.5306212902069092秒
+
+使用多线程，workers=10，耗时 3.461984157562256秒
+
+使用多线程，workers=1，耗时 32.65285873413086秒
+
+测试请求10000条
+
+使用协程，Semaphore=100，耗时：99.30082130432129秒左右，大概100/S，和Semaphore一致
+
+使用多线程，workers=100，报错
+
+###### 3.asyncio.run()和lock
+
+当代码中使用了`lock = asyncio.Lock()`创建锁，并且使用`asyncio.run()`运行代码，有可能会出现`Task <Task pending ...> got Future <Future pending> attached to a different loop Task was destroyed but it is pending!`的报错。
+
+可能的原因是：`syncio.Lock`与`asyncio.run`之间的事件循环可能不匹配，通常会在某些环境中（如特定的 IDE 或脚本运行环境）出现问题。原因在于`asyncio.run` 创建并管理一个新的事件循环，而锁 (`asyncio.Lock`) 可能会被不同的事件循环使用，从而导致不一致。为避免这种情况，可以显式创建并使用一个事件循环:
+
+```python
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+```
+
+###### 4.asyncio.to_thread()
+
+`asyncio.to_thread()` 是 Python 3.9 引入的一个函数，它的主要作用是在单独的线程中运行一个函数，并将其结果作为一个协程返回。这使得我们可以在 `asyncio` 的事件循环中安全地调用阻塞的同步函数，而不会阻塞事件循环。
+
+**为什么需要 `asyncio.to_thread()`？**
+
+在异步编程中，我们应该尽量避免执行阻塞操作，因为它们会阻塞事件循环，导致整个程序停顿。然而，在实际开发中，我们可能会遇到一些无法避免的阻塞操作，例如：
+
+- 调用一些没有提供异步接口的第三方库。
+- 执行一些 CPU 密集型计算。
+- 进行文件 I/O 操作（虽然 `aiofiles` 等库提供了异步文件操作，但在某些情况下可能不适用）。
+
+在这种情况下，`asyncio.to_thread()` 就派上了用场。它可以将这些阻塞操作放到单独的线程中执行，从而避免阻塞事件循环。
+
+**`asyncio.to_thread()` 的用法**
+
+`asyncio.to_thread()` 的基本用法如下：
+
+```python
+import asyncio
+
+async def main():
+    def blocking_io():
+        print(f"start blocking_io at {asyncio.get_running_loop()}")
+        # 模拟阻塞操作
+        import time
+        time.sleep(1)
+        print(f"blocking_io complete at {asyncio.get_running_loop()}")
+        return "Blocking result"
+
+    print(f"start main at {asyncio.get_running_loop()}")
+    result = await asyncio.to_thread(blocking_io)
+    print(f"end main with result: {result} at {asyncio.get_running_loop()}")
+
+asyncio.run(main())
+```
+
+**注意事项**
+
+- **GIL 的影响：** 由于 Python 的全局解释器锁（GIL）的存在，`asyncio.to_thread()` 对于 CPU 密集型任务的性能提升有限。对于 CPU 密集型任务，应该使用 `concurrent.futures.ProcessPoolExecutor()` 来利用多核 CPU。但是对于 I/O 密集型任务，`asyncio.to_thread()` 仍然非常有效。
+- **线程安全：** 传递给 `asyncio.to_thread()` 的函数应该是线程安全的。如果函数访问了共享的可变数据，需要使用适当的同步机制（如锁）来保护数据。
+- **异常处理：** 如果在线程中执行的函数抛出异常，`asyncio.to_thread()` 返回的协程也会抛出相同的异常。可以使用 `try...except` 语句来捕获异常。
+
+**与 `loop.run_in_executor()` 的比较**
+
+在 Python 3.9 之前，通常使用 `loop.run_in_executor()` 来在单独的线程或进程中运行函数。`asyncio.to_thread()` 可以看作是 `loop.run_in_executor()` 的一个简化版本，它默认使用线程池执行器，使用起来更加方便。
+
+##### aiolimite
+
+`AsyncLimiter` 是一个实现了 **漏桶算法（Leaky Bucket Algorithm）** 的速率限制器，允许我们控制并发请求的速率。在异步编程中，`AsyncLimiter` 可以用作异步上下文管理器（`async with`），用于限制在一定时间内进行的操作次数。例如，限制每分钟最多执行 10 次任务，或者每秒最多执行一定数量的请求。
+
+````
+GTP源码介绍：
+https://chatgpt.com/share/676532aa-9794-8004-b724-358e921655e6
+
+顺便一提：
+源码中的__aenter__：
+在 Python 中，__aenter__ 和 __aexit__ 是异步上下文管理器的一部分，它们用于定义一个对象的异步上下文管理协议。这些方法通常在 async with 语句中使用。
+__aenter__ 方法在进入 async with 语句的上下文管理器时调用。这通常用于设置资源，例如打开文件，或者建立网络连接。
+__aexit__ 方法在离开 async with 语句的上下文管理器时调用。这通常用于清理资源，例如关闭文件，或者断开网络连接。
+````
+
+使用`aiolimite`的原因是替换`asyncio`中的`semaphore`，原因是使用了`semaphore`后，发现调用百度API的QPS远超90，后面才发现是混淆了概念，semaphore是表示协程的并发数，和QPS的概率不同，并不是一秒内的并行数量，使用`aiolimite`可以设置周期内的并发数，适合用于调用有QPS限制的API，使用方式也很简单，定义`limiter = AsyncLimiter(90, 1)`,对需要显示的代码使用with管理，`async with self.limiter`
+
+
+
 ### conda环境搭建
 
 ```
@@ -407,7 +759,7 @@ wget https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-x86_64.sh
 1、打开配置文件：
     vim /etc/profile
 2、 在文件的最后加上如下配置
-    export ANACONDA_HOME=xxx/anaconda3           # 步骤2.4 中的安装路径
+    export ANACONDA_HOME=/home/data/xw_bigdata/anaconda3           # 步骤2.4 中的安装路径
     export PATH=$ANACONDA_HOME/bin:$PATH
     export PYSPARK_PYTHON=$ANACONDA_HOME/bin/python            # 可不添加
 3、source /etc/profile     # 使文件修改生效
@@ -417,6 +769,29 @@ conda config --add channels https://mirrors.aliyun.com/conda/pkgs/free/
 conda config --add channels https://mirrors.aliyun.com/conda/pkgs/main/
 conda config --add channels https://mirrors.aliyun.com/conda/pkgs/r/
 
+#移除
+conda config --remove channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+
+# 也可以在/root/.condarc修改
+channels:
+  - defaults
+show_channel_urls: true
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch-lts: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  deepmodeling: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/
+  
+# 其他的可以参考：
+https://zhuanlan.zhihu.com/p/584580420
 ```
 
 ##### 命令
@@ -427,7 +802,8 @@ conda config --add channels https://mirrors.aliyun.com/conda/pkgs/r/
 conda update -n base conda #update最新版本的conda
 3. conda update --all #更新所有包
 4. conda update package_name #更新指定的包
-5. conda create -n env_name package_name #创建名为env_name的新环境，并在该环境下安装名为package_name 的包，可以指定新环境的版本号，例如：conda create -n python2 python=python2.7 numpy pandas，创建了python2环境，python版本为2.7，同时还安装了numpy pandas包
+5. conda create -n env_name package_name #创建名为env_name的新环境，并在该环境下安装名为package_name 的包，可以指定新环境的版本号，
+例如：conda create -n test_env python=3.10 numpy pandas，创建了python2环境，python版本为2.7，同时还安装了numpy pandas包
 6. conda activate env_name #切换至env_name环境
 7. conda deactivate #退出环境
 8. conda info -e #显示所有已经创建的环境
@@ -464,7 +840,6 @@ conda clean -r        # 删除 tar 包
 conda clean -y --all    # 删除所有的安装包及cache
 ```
 
-
 **如何使用回服务器的python**
 
 ```
@@ -481,3 +856,318 @@ source ~/.bashrc
 查看：
 echo $PATH
 WHICH python3
+```
+
+
+**重新部署**
+
+```
+
+1.conda create -n store-server python=3.11
+报错：
+Retrieving notices: ...working... done
+Collecting package metadata (current_repodata.json): failed
+
+UnavailableInvalidChannel: HTTP 404 NOT FOUND for channel pkgs/r <https://mirrors.aliyun.com/conda/pkgs/r>
+
+The channel is not accessible or is invalid.
+
+You will need to adjust your conda configuration to proceed.
+Use `conda config --show channels` to view your configuration's current state,
+and use `conda config --show-sources` to view config file locations.
+
+conda config --show-sources
+==> /root/.condarc <==
+auto_activate_base: False
+channels:
+  - https://mirrors.aliyun.com/conda/pkgs/r/
+  - https://mirrors.aliyun.com/conda/pkgs/main/
+  - https://mirrors.aliyun.com/conda/pkgs/free/
+  - conda-forge
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  - defaults
+
+# 移除
+
+conda config --remove channels https://mirrors.aliyun.com/conda/pkgs/r/
+conda config --remove channels https://mirrors.aliyun.com/conda/pkgs/main/
+conda config --remove channels https://mirrors.aliyun.com/conda/pkgs/free/
+
+# 添加
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro/
+
+# 重新
+conda create -n store-server python=3.11
+conda activate store-server
+pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+
+
+```
+
+## pydantic2.7
+
+Pydantic 是一个用于数据验证和解析的 Python 库，它通过声明式的方式定义数据模型，并提供了自动生成文档、验证数据等功能。
+
+#### 基础用法
+
+```python
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    id: int
+    name: str = 'Jane Doe'
+    
+user = User(id='123')
+
+
+assert user.model_dump() == {'id': 123, 'name': 'Jane Doe'}
+assert user.model_fields_set == {'id'}
+assert user.name == 'Jane Doe'
+```
+
+#### orm模型
+
+使用model_validate方法将sqlalchemy-orm转为pydantic模型
+
+model_validate(): 它接受一个dict或一个对象而不是关键字参数。如果传递的对象不能被验证，或者它不是一个字典或模型的实例，那么将引发一个 ValidationError 。
+
+model_validate_json():接受一个str或bytes并将其解析为json，然后将结果传递给 `model_validate()` 。
+
+```python
+from typing import List
+
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.orm import declarative_base
+from typing_extensions import Annotated
+
+from pydantic import BaseModel, ConfigDict, StringConstraints
+
+Base = declarative_base()
+
+
+class CompanyOrm(Base):
+    __tablename__ = 'companies'
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    public_key = Column(String(20), index=True, nullable=False, unique=True)
+    name = Column(String(63), unique=True)
+    domains = Column(ARRAY(String(255)))
+
+
+class CompanyModel(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    public_key: Annotated[str, StringConstraints(max_length=20)]
+    name: Annotated[str, StringConstraints(max_length=63)]
+    domains: List[Annotated[str, StringConstraints(max_length=255)]]
+
+
+co_orm = CompanyOrm(
+    id=123,
+    public_key='foobar',
+    name='Testing',
+    domains=['example.com', 'foobar.com'],
+)
+print(co_orm)
+#> <__main__.CompanyOrm object at 0x0123456789ab>
+co_model = CompanyModel.model_validate(co_orm)
+print(co_model)
+"""
+id=123 public_key='foobar' name='Testing' domains=['example.com', 'foobar.com']
+"""
+
+# model_validate_json()
+class User(BaseModel):
+    id: int
+    name: str = 'John Doe'
+    signup_ts: Optional[datetime] = None
+
+
+m = User.model_validate({'id': 123, 'name': 'James'})
+print(m)
+#> id=123 name='James' signup_ts=None
+
+try:
+    User.model_validate(['not', 'a', 'dict'])
+except ValidationError as e:
+    print(e)
+    """
+    1 validation error for User
+      Input should be a valid dictionary or instance of User [type=model_type, input_value=['not', 'a', 'dict'], input_type=list]
+    """
+
+m = User.model_validate_json('{"id": 123, "name": "James"}')
+print(m)
+```
+
+
+
+```python
+from pydantic import BaseModel, ConfigDict
+
+
+class User(BaseModel):
+    model_config = ConfigDict(extra='ignore')  
+
+    name: str
+
+
+user = User(name='John Doe', age=20)  
+print(user)
+#> name='John Doe'
+```
+
+## Transformers
+
+Python的`transformers`库是由Hugging Face开发的开源工具，旨在简化自然语言处理（NLP）任务的实现。
+
+### **1. 简介与背景**
+
+- **背景**：Hugging Face的`transformers`库集成了多种预训练模型（如BERT、GPT、T5、RoBERTa等），支持PyTorch、TensorFlow和JAX框架，广泛应用于文本分类、生成、翻译等任务。
+- **优势**：提供统一的API，用户无需从头训练模型，可直接使用或微调预训练模型，节省资源。
+
+### **2. 安装与基本用法**
+
+- **安装**：
+
+  ```bash
+  pip install transformers
+  ```
+
+- **快速示例（文本分类）**：
+
+  ```python
+  from transformers import pipeline
+  
+  # 使用预构建的pipeline
+  classifier = pipeline("sentiment-analysis")
+  result = classifier("I love using transformers!")
+  print(result)  # 输出：[{'label': 'POSITIVE', 'score': 0.9998}]
+  ```
+
+### **3. 核心组件**
+
+- **分词器（Tokenizer）**：
+
+  - 将文本转换为模型所需的输入格式（如token ID、attention mask）。
+
+  - 示例：
+
+    ```python
+    from transformers import AutoTokenizer
+    
+    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+    inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")  # 返回PyTorch张量
+    ```
+
+- **模型（Model）**：
+
+  - 加载预训练模型，支持多种架构（如`BertModel`, `GPT2LMHeadModel`）。
+
+  - 示例：
+
+    ```python
+    from transformers import AutoModel
+    
+    model = AutoModel.from_pretrained("bert-base-uncased")
+    outputs = model(**inputs)  # 前向传播
+    ```
+
+- **配置（Config）**：
+
+  - 控制模型结构参数（如层数、注意力头数）。
+
+  - 示例：
+
+    ```python
+    from transformers import BertConfig
+    
+    config = BertConfig.from_pretrained("bert-base-uncased")
+    model = BertModel(config)  # 根据配置初始化模型
+    ```
+
+### **4. 使用示例**
+
+#### **文本生成（GPT-2）**
+
+```python
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+
+inputs = tokenizer("Once upon a time,", return_tensors="pt")
+outputs = model.generate(**inputs, max_length=50)
+print(tokenizer.decode(outputs[0]))
+```
+
+#### **微调模型（以文本分类为例）**
+
+```python
+from transformers import Trainer, TrainingArguments, AutoModelForSequenceClassification
+from datasets import load_dataset
+
+dataset = load_dataset("imdb")  # 加载数据集
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+
+# 定义训练参数
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=3,
+    per_device_train_batch_size=16,
+)
+
+# 使用Trainer简化训练
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset["train"],
+    eval_dataset=dataset["test"],
+)
+trainer.train()
+```
+
+### **5. 常见任务与应用场景**
+
+- **文本分类**：情感分析、垃圾邮件检测。
+- **文本生成**：故事创作、代码补全（如CodeGen）。
+- **问答系统**：基于BERT的抽取式问答。
+- **翻译与摘要**：使用T5或BART模型。
+- **命名实体识别（NER）**：标记文本中的实体。
+
+### **6. 高级功能与技巧**
+
+- **模型压缩**：使用`bitsandbytes`进行8位量化，减少内存占用。
+
+- **分布式训练**：利用`accelerate`库实现多GPU/TPU训练。
+
+- 自定义模型
+
+  ：添加任务特定层（如分类头）并微调。
+
+  ```python
+  from transformers import BertForSequenceClassification
+  
+  model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=5)
+  ```
+
+### **7. 资源与社区**
+
+- **Hugging Face Hub**：托管数千个预训练模型（[链接](https://huggingface.co/models)）。
+- **文档与教程**：详细指南和示例（[文档](https://huggingface.co/docs/transformers/)）。
+- **社区支持**：活跃的论坛和GitHub仓库，便于问题解答。
+
+------
+
+### **8. 注意事项**
+
+- **输入长度限制**：如BERT最多处理512个token，超长文本需截断或分段。
+- **硬件要求**：大型模型（如GPT-3）需高显存，可选用小规模变体（如`distilbert`）。
+- **分词器匹配**：确保分词器与模型匹配（如BERT分词器不可用于GPT-2）。
