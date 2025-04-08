@@ -1,0 +1,2786 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="个人分享、记录">
+      
+      
+        <meta name="author" content="wwl">
+      
+      
+        <link rel="canonical" href="https://whi-winds-lull.github.io/wwlblog/bigdata/pyspark/">
+      
+      
+        <link rel="prev" href="../git/">
+      
+      
+        <link rel="next" href="../pandas%20vs%20pyspark/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>pyspark - Wblog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC+-+local:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC - local";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-N2KX18D54W"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-N2KX18D54W",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-N2KX18D54W",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+<link rel="stylesheet" href="../../assets/stylesheets/custom.00c04c01.min.css">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pyspark" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Wblog" class="md-header__button md-logo" aria-label="Wblog" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wblog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              pyspark
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="切换至夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/whi-winds-lull/wwlblog" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    whi-winds-lull
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  主页
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  心情
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Wblog" class="md-nav__button md-logo" aria-label="Wblog" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon.png" alt="logo">
+
+    </a>
+    Wblog
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/whi-winds-lull/wwlblog" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    whi-winds-lull
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    主页
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            主页
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    开发
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            开发
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hudi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    hudi
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    pyspark
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    pyspark
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      先附图
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create RDD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getnumpartitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      getNumPartitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repartition-and-coalesce" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repartition and Coalesce
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd-transformations" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD Transformations算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD Transformations算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flatmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      flatMap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reducebykey" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduceByKey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortbykey" class="md-nav__link">
+    <span class="md-ellipsis">
+      sortByKey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      filter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD Actions算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD Actions算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count" class="md-nav__link">
+    <span class="md-ellipsis">
+      count
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first" class="md-nav__link">
+    <span class="md-ellipsis">
+      first
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max" class="md-nav__link">
+    <span class="md-ellipsis">
+      max
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#take" class="md-nav__link">
+    <span class="md-ellipsis">
+      take
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advantages-of-persisting-rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages of Persisting RDD
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advantages of Persisting RDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      Broadcast
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accumulators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accumulators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些优化策略
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一些优化策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      遍历DataFrame的优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      读取文件
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      启动参数
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="启动参数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archives" class="md-nav__link">
+    <span class="md-ellipsis">
+      archives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="archives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      作用：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      使用场景：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      示例：
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      spark常见问题：
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="spark常见问题：">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题一：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caused-by-orgapachesparksparkexception-could-not-execute-broadcast-in-300-secs-you-can-increase-the-timeout-for-broadcasts-via-sparksqlbroadcasttimeout-or-disable-broadcast-join-by-setting-sparksqlautobroadcastjointhreshold-to-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题二： 日志中出现：Caused by: org.apache.spark.SparkException: Could not execute broadcast in 300 secs. You can increase the timeout for broadcasts via spark.sql.broadcastTimeout or disable broadcast join by setting spark.sql.autoBroadcastJoinThreshold to -1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparksqlcatalystparserparseexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题三： 日志中出现：org.apache.spark.sql.catalyst.parser.ParseException
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparkexception-could-not-find-coarsegrainedscheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题四： 日志中出现：SparkException: Could not find CoarseGrainedScheduler
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-in-thread-main-javalangnosuchmethoderror-scalacollectionimmutablec-o-l-o-n-coloncoloncolontl1lscalacollectionimmutablelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题五： 日志中出现：Exception in thread “main” java.lang.NoSuchMethodError: scala.collection.immutable.c o l o n coloncoloncolon.tl$1()Lscala/collection/immutable/List;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparksparkexception-job-aborted-due-to-stage-failure-total-size-of-serialized-results-of-9478-tasks-10241-mib-is-bigger-than-sparkdrivermaxresultsize-10240-mib" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题六： 日志中出现：org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 9478 tasks (1024.1 MiB) is bigger than spark.driver.maxResultSize (1024.0 MiB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-executor-with-id-12-exited-with-exit-code-137" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题七： 日志中出现：The executor with id 12 exited with exit code 137
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warn-tasksetmanager-lost-task-10-in-stage-00-tid-1-aalocal-executorlostfailure-executor-lost-warn-tasksetmanager-lost-task-692-in-stage-70-tid-1145-19216847217-javaioioexception-connection-from-1921684721755483-closed-javautilconcurrenttimeoutexception-futures-timed-out-after-120-second-error-transportchannelhandler-connection-to-1921684721235409-has-been-quiet-for-120000-ms-while-there-are-outstanding-requests-assuming-connection-is-dead-please-adjust-sparknetworktimeout-if-this-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题八： WARN TaskSetManager: Lost task 1.0 in stage 0.0 (TID 1, aa.local): ExecutorLostFailure (executor lost) WARN TaskSetManager: Lost task 69.2 in stage 7.0 (TID 1145, 192.168.47.217): java.io.IOException: Connection from /192.168.47.217:55483 closed java.util.concurrent.TimeoutException: Futures timed out after [120 second ERROR TransportChannelHandler: Connection to /192.168.47.212:35409 has been quiet for 120000 ms while there are outstanding requests. Assuming connection is dead; please adjust spark.network.timeout if this is wrong
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangoutofmemoryerror-not-enough-memory-to-build-and-broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题九： 日志中出现：java.lang.OutOfMemoryError: Not enough memory to build and broadcast
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangoutofmemoryerror-java-heap-space-at-javautilarrayscopyof-javalangoutofmemoryerror-java-heap-space-at-javalangreflectarraynewinstance" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十： java.lang.OutOfMemoryError: Java heap space at java.util.Arrays.copyOf java.lang.OutOfMemoryError: Java heap space at java.lang.reflect.Array.newInstance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-sql-insert-overwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十一： spark sql 执行insert overwrite的时候，出现数据重复。
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark105" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十二： Spark任务正常执行10分钟左右，但是偶尔会出现任务运行时间过长比如5个小时左右
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparkshufflefetchfailedexception-the-relative-remote-executorid-21-which-maintains-the-block-data-to-fetch-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十三： org.apache.spark.shuffle.FetchFailedException: The relative remote executor(Id: 21), which maintains the block data to fetch is dead.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javaioioexception-javaioeofexception-unexpected-end-of-input-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十四： java.io.IOException: java.io.EOFException: Unexpected end of input stream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-in-thread-main-javalangnosuchmethoderror-scalapredefrefarrayopsljavalangobjectljavalangobject" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十五： Exception in thread “main” java.lang.NoSuchMethodError: scala.Predef$.refArrayOps([Ljava/lang/Object;)[Ljava/lang/Object;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangstackoverflowerror-at-orgcodehausjaninocodecontextextract16bitvaluecodecontextjava763-at-orgcodehausjaninocodecontextflowanalysiscodecontextjava600" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十六： : java.lang.StackOverflowError at org.codehaus.janino.CodeContext.extract16BitValue(CodeContext.java:763) at org.codehaus.janino.CodeContext.flowAnalysis(CodeContext.java:600)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-codegenerator-failed-to-compile-orgcodehausjaninointernalcompilerexception-compiling-generatedclass-in-generatedjava-code-of-method-processnextv-of-class-orgapachesparksqlcatalystexpressionsgeneratedclassgeneratediteratorforcodegenstage1-grows-beyond-64-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十七： ERROR CodeGenerator: failed to compile: org.codehaus.janino.InternalCompilerException: Compiling "GeneratedClass" in "generated.java": Code of method "processNext()V" of class "org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1" grows beyond 64 KB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-web-uilocality_level" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十八： 关于spark web ui上的Locality_level:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dfshow" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十九： df.show()显示不完整
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandas%20vs%20pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pandas vs pyspark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../es/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    es
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%A1%86%E6%9E%B6%E5%91%BD%E4%BB%A4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    大数据框架命令
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85Python3%E7%8E%AF%E5%A2%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    [Linux系统安装高版本Python3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pg%E5%AE%89%E8%A3%85%E6%80%BB%E7%BB%93/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pg安装
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curl%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Curl源码安装报错解决
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FLINK%E7%9B%91%E6%8E%A7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FLINK监控
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SSH%E5%85%8D%E5%AF%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSH免密
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    数据挖掘
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%87%E7%BA%A7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    hadoop升级
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Hudi%E5%90%88%E5%B9%B6%E5%B0%8F%E6%96%87%E4%BB%B6%E6%96%B9%E6%A1%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hudi合并小文件方案
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clickhouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    clickhouse指南
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_19" id="__nav_2_19_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    分享
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_19">
+            <span class="md-nav__icon md-icon"></span>
+            分享
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../share/recommend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    分享一些好用的网站
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    心情
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            心情
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/cat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cat
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      先附图
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create RDD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getnumpartitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      getNumPartitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repartition-and-coalesce" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repartition and Coalesce
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd-transformations" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD Transformations算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD Transformations算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flatmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      flatMap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reducebykey" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduceByKey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sortbykey" class="md-nav__link">
+    <span class="md-ellipsis">
+      sortByKey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      filter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdd-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      RDD Actions算子
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RDD Actions算子">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count" class="md-nav__link">
+    <span class="md-ellipsis">
+      count
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first" class="md-nav__link">
+    <span class="md-ellipsis">
+      first
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max" class="md-nav__link">
+    <span class="md-ellipsis">
+      max
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce" class="md-nav__link">
+    <span class="md-ellipsis">
+      reduce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#take" class="md-nav__link">
+    <span class="md-ellipsis">
+      take
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advantages-of-persisting-rdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages of Persisting RDD
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advantages of Persisting RDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      Broadcast
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accumulators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accumulators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些优化策略
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一些优化策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      遍历DataFrame的优化
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      读取文件
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      启动参数
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="启动参数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archives" class="md-nav__link">
+    <span class="md-ellipsis">
+      archives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="archives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      作用：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      使用场景：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      示例：
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spark" class="md-nav__link">
+    <span class="md-ellipsis">
+      spark常见问题：
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="spark常见问题：">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题一：
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caused-by-orgapachesparksparkexception-could-not-execute-broadcast-in-300-secs-you-can-increase-the-timeout-for-broadcasts-via-sparksqlbroadcasttimeout-or-disable-broadcast-join-by-setting-sparksqlautobroadcastjointhreshold-to-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题二： 日志中出现：Caused by: org.apache.spark.SparkException: Could not execute broadcast in 300 secs. You can increase the timeout for broadcasts via spark.sql.broadcastTimeout or disable broadcast join by setting spark.sql.autoBroadcastJoinThreshold to -1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparksqlcatalystparserparseexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题三： 日志中出现：org.apache.spark.sql.catalyst.parser.ParseException
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparkexception-could-not-find-coarsegrainedscheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题四： 日志中出现：SparkException: Could not find CoarseGrainedScheduler
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-in-thread-main-javalangnosuchmethoderror-scalacollectionimmutablec-o-l-o-n-coloncoloncolontl1lscalacollectionimmutablelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题五： 日志中出现：Exception in thread “main” java.lang.NoSuchMethodError: scala.collection.immutable.c o l o n coloncoloncolon.tl$1()Lscala/collection/immutable/List;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparksparkexception-job-aborted-due-to-stage-failure-total-size-of-serialized-results-of-9478-tasks-10241-mib-is-bigger-than-sparkdrivermaxresultsize-10240-mib" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题六： 日志中出现：org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 9478 tasks (1024.1 MiB) is bigger than spark.driver.maxResultSize (1024.0 MiB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-executor-with-id-12-exited-with-exit-code-137" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题七： 日志中出现：The executor with id 12 exited with exit code 137
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warn-tasksetmanager-lost-task-10-in-stage-00-tid-1-aalocal-executorlostfailure-executor-lost-warn-tasksetmanager-lost-task-692-in-stage-70-tid-1145-19216847217-javaioioexception-connection-from-1921684721755483-closed-javautilconcurrenttimeoutexception-futures-timed-out-after-120-second-error-transportchannelhandler-connection-to-1921684721235409-has-been-quiet-for-120000-ms-while-there-are-outstanding-requests-assuming-connection-is-dead-please-adjust-sparknetworktimeout-if-this-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题八： WARN TaskSetManager: Lost task 1.0 in stage 0.0 (TID 1, aa.local): ExecutorLostFailure (executor lost) WARN TaskSetManager: Lost task 69.2 in stage 7.0 (TID 1145, 192.168.47.217): java.io.IOException: Connection from /192.168.47.217:55483 closed java.util.concurrent.TimeoutException: Futures timed out after [120 second ERROR TransportChannelHandler: Connection to /192.168.47.212:35409 has been quiet for 120000 ms while there are outstanding requests. Assuming connection is dead; please adjust spark.network.timeout if this is wrong
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangoutofmemoryerror-not-enough-memory-to-build-and-broadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题九： 日志中出现：java.lang.OutOfMemoryError: Not enough memory to build and broadcast
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangoutofmemoryerror-java-heap-space-at-javautilarrayscopyof-javalangoutofmemoryerror-java-heap-space-at-javalangreflectarraynewinstance" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十： java.lang.OutOfMemoryError: Java heap space at java.util.Arrays.copyOf java.lang.OutOfMemoryError: Java heap space at java.lang.reflect.Array.newInstance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-sql-insert-overwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十一： spark sql 执行insert overwrite的时候，出现数据重复。
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark105" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十二： Spark任务正常执行10分钟左右，但是偶尔会出现任务运行时间过长比如5个小时左右
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orgapachesparkshufflefetchfailedexception-the-relative-remote-executorid-21-which-maintains-the-block-data-to-fetch-is-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十三： org.apache.spark.shuffle.FetchFailedException: The relative remote executor(Id: 21), which maintains the block data to fetch is dead.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javaioioexception-javaioeofexception-unexpected-end-of-input-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十四： java.io.IOException: java.io.EOFException: Unexpected end of input stream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-in-thread-main-javalangnosuchmethoderror-scalapredefrefarrayopsljavalangobjectljavalangobject" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十五： Exception in thread “main” java.lang.NoSuchMethodError: scala.Predef$.refArrayOps([Ljava/lang/Object;)[Ljava/lang/Object;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#javalangstackoverflowerror-at-orgcodehausjaninocodecontextextract16bitvaluecodecontextjava763-at-orgcodehausjaninocodecontextflowanalysiscodecontextjava600" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十六： : java.lang.StackOverflowError at org.codehaus.janino.CodeContext.extract16BitValue(CodeContext.java:763) at org.codehaus.janino.CodeContext.flowAnalysis(CodeContext.java:600)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-codegenerator-failed-to-compile-orgcodehausjaninointernalcompilerexception-compiling-generatedclass-in-generatedjava-code-of-method-processnextv-of-class-orgapachesparksqlcatalystexpressionsgeneratedclassgeneratediteratorforcodegenstage1-grows-beyond-64-kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十七： ERROR CodeGenerator: failed to compile: org.codehaus.janino.InternalCompilerException: Compiling "GeneratedClass" in "generated.java": Code of method "processNext()V" of class "org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1" grows beyond 64 KB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-web-uilocality_level" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十八： 关于spark web ui上的Locality_level:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dfshow" class="md-nav__link">
+    <span class="md-ellipsis">
+      问题十九： df.show()显示不完整
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/whi-winds-lull/wwlblog/edit/main/docs/bigdata/pyspark.md" title="编辑此页" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="pyspark">pyspark</h1>
+<h3 id="_1">先附图</h3>
+<p><img alt="" src="../../assets/images/pyspark-sql.jpg" /></p>
+<h3 id="create-rdd">Create RDD</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dataList</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;java good&quot;</span><span class="p">,</span> <span class="s2">&quot;Python awsome&quot;</span><span class="p">,</span> <span class="s2">&quot;Scala good&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">rdd</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">dataList</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="getnumpartitions">getNumPartitions</h3>
+<p>获取分区数量
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;initial partition count:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rdd</span><span class="o">.</span><span class="n">getNumPartitions</span><span class="p">()))</span>
+</code></pre></div></p>
+<h3 id="repartition-and-coalesce">Repartition and Coalesce</h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">reparRdd</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;re-partition count:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">reparRdd</span><span class="o">.</span><span class="n">getNumPartitions</span><span class="p">()))</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">reparRdd2</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;re-partition count:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">reparRdd2</span><span class="o">.</span><span class="n">getNumPartitions</span><span class="p">()))</span>
+</code></pre></div>
+ repartition（）方法是一个非常昂贵的操作，因为它会将集群中所有节点的数据混洗
+ 如果你在4个分区中有数据，那么执行coalesce（2）只从2个节点移动数据。coalesce()只能减少分区，不能增加分区
+ 总结：减少分区使用coalesce，增加分区使用repartition</p>
+<h2 id="rdd-transformations">RDD Transformations算子</h2>
+<h3 id="flatmap">flatMap</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">rdd2</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">flatMap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="map">Map</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">rdd3</span> <span class="o">=</span> <span class="n">rdd2</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="reducebykey">reduceByKey</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">rdd4</span> <span class="o">=</span> <span class="n">rdd3</span><span class="o">.</span><span class="n">reduceByKey</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="sortbykey">sortByKey</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">rdd5</span> <span class="o">=</span> <span class="n">rdd4</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">.</span><span class="n">sortByKey</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="filter">filter</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">rdd6</span> <span class="o">=</span> <span class="n">rdd5</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;Python&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="rdd-actions">RDD Actions算子</h2>
+<h3 id="count">count</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Count : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rdd6</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+</code></pre></div>
+<h3 id="first">first</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">firstRec</span> <span class="o">=</span> <span class="n">rdd6</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First Record : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">firstRec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">firstRec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="max">max</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">datMax</span> <span class="o">=</span> <span class="n">rdd6</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Max Record : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datMax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">datMax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="reduce">reduce</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">totalWordCount</span> <span class="o">=</span> <span class="n">rdd5</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dataReduce Record : &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">totalWordCount</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="take">take</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">data3</span> <span class="o">=</span> <span class="n">rdd5</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">data3</span><span class="p">:</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data3 Key:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;, Value:&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="advantages-of-persisting-rdd">Advantages of Persisting RDD</h2>
+<h3 id="cache">Cache</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">cachedRdd</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># 默认Cache storage level `MEMORY_ONLY`</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># 可选RDD Persist MEMORY_ONLY,MEMORY_AND_DISK, MEMORY_ONLY_SER, MEMORY_AND_DISK_SER, DISK_ONLY, MEMORY_ONLY_2,MEMORY_AND_DISK_2 and more.</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 指定不同的存储级别</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">dfPersist</span> <span class="o">=</span> <span class="n">rdd</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">pyspark</span><span class="o">.</span><span class="n">StorageLevel</span><span class="o">.</span><span class="n">MEMORY_ONLY</span><span class="p">)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># 释放RDD的持久性，从而释放占用的内存。</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">rddPersist2</span> <span class="o">=</span> <span class="n">dfPersist</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="broadcast">Broadcast</h3>
+<p>Broadcast 是一种用于将大数据结构广播到集群中的所有节点以供任务使用的机制。这对于避免网络传输和提高性能非常有用，尤其是当你需要在多个任务中使用相同的数据时，例如在 join 操作中。
+ Broadcast 可以用于将只读的大数据结构（例如字典、集合、DataFrame 等）传播到各个节点，以避免将这些数据复制到每个任务的内存中。这可以减少网络传输和降低内存占用，从而提高性能。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">broadcastVar</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">broadcast</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">broadcastVar</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></p>
+<h3 id="accumulators">Accumulators</h3>
+<p>用于在分布式计算中进行累积操作。Accumulator 通常用于在并行操作中累积结果，例如计数或总和，而不会引发竞争条件（race condition）。它们在多个任务中进行并行操作，然后将结果累积到单个变量中。
+ 主要的用法是在 Spark 作业中创建一个 Accumulator，然后在不同的任务中累积值。这些值可以被所有任务读取，但只能被累积，不能被修改。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">accumulator</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">accumulator</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">accumulator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">accumulator</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="_2">一些优化策略</h2>
+<h3 id="dataframe">遍历DataFrame的优化</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataFrame</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">paths</span> <span class="o">=</span> <span class="n">get_file_paths</span><span class="p">()</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># BAD: For loop</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  <span class="n">df</span> <span class="o">=</span> <span class="n">fancy_transformations</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  <span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># GOOD: functools.reduce</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="n">lazily_evaluated_reads</span> <span class="o">=</span> <span class="p">[</span><span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="n">lazily_evaluted_transforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">fancy_transformations</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">lazily_evaluated_reads</span><span class="p">]</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="n">unioned_df</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">union</span><span class="p">,</span> <span class="n">lazily_evaluted_transforms</span><span class="p">)</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="n">unioned_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="_3">读取文件</h3>
+<p>读取文件时,比如Parquet、JSON和ORC，hudi使用Parquet格式，理论上也适用，假设要读取10GB的数据，可使用以下计算要使用的资源：<br />
+spark默认读取单个分区的大小为128Mb，取决于：<br />
+- spark.sql.files.maxPartitionBytes:<br />
+用途: 这个参数用于控制 Spark SQL 在读取文件时，单个分区中最多可以包含的字节数。
+默认值: 默认值为 128MB。
+适用场景: 当 Spark 使用 SparkSession 读取文件数据源（如 Parquet、ORC、CSV 等）时，该参数会决定每个分区所读取的数据量。此参数对 Spark SQL 及 DataFrame API 相关的操作生效。
+影响: 如果文件很大，那么 Spark 会将文件分成多个分区，每个分区最多会读取 spark.sql.files.maxPartitionBytes 大小的数据。这有助于避免单个分区数据过大，从而导致内存溢出。
+- spark.files.maxPartitionBytes:<br />
+用途: 这个参数用于控制 Spark Core 在处理文件时，单个分区的最大字节数。
+默认值: 这个参数默认值没有硬性规定，但如果使用的话，通常与 spark.sql.files.maxPartitionBytes 类似。
+适用场景: 这个参数主要应用于 Spark Core 中，当你使用 sc.textFile 或其他文件读取操作时，控制每个分区的数据量。
+影响: 类似于 spark.sql.files.maxPartitionBytes，但作用范围更广，适用于所有使用 Spark Core 直接读取文件的操作。  </p>
+<p>计算如下：<br />
+10GB = 10 * 1024Mb = 10240<br />
+分区数 = 10240 / 128 = 80<br />
+一般，建议一个执行器中有2-5个执行器核心，如果我们取一个执行器中的执行器核心数=4，那么执行器总数= 80/4 = 20<br />
+默认情况下，执行器核心的总内存应为默认分区内存的4倍,即4 * 128Mb = 512Mb，因此，执行器总内存 = 核心数<em>512 = 4</em>512 = 2GB<br />
+所以，读取10Gb的数据，理论上要达到最大并行，需要20个executors， 2Gb的executors memory</p>
+<h2 id="_4">启动参数</h2>
+<h3 id="archives">archives</h3>
+<p>在 Spark 中，--archives 是一个用于指定需要分发到所有工作节点的归档文件（如 .zip、.tar.gz 等）的命令参数。通过 --archives 参数，你可以将这些归档文件解压并分发到每个执行器节点中，供作业使用。  </p>
+<h4 id="_5">作用：</h4>
+<ul>
+<li>分发文件：将指定的归档文件分发到集群的所有工作节点。</li>
+<li>解压归档文件：这些归档文件会被自动解压到执行器的工作目录中，供作业使用。</li>
+</ul>
+<h4 id="_6">使用场景：</h4>
+<ul>
+<li>依赖包或资源：如果你的 Spark 作业依赖一些外部库或者资源文件，这些库或者资源文件可以打包成归档文件，通过 --archives 选项分发和解压到每个工作节点上。</li>
+<li>运行环境：如果你需要在每个节点上配置特定的运行环境（例如 Python 虚拟环境），可以将这些环境打包成归档文件，通过 --archives 分发到每个节点。</li>
+</ul>
+<h4 id="_7">示例：</h4>
+<p>如果你使用 Conda 创建了一个虚拟环境，并希望在 Spark 集群上分发并使用该环境
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 创建环境</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>pyspark_env_3.10<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span>pyspark
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># 打包环境</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>conda<span class="w"> </span>pack<span class="w"> </span>-n<span class="w"> </span>pyspark_env_3.10<span class="w"> </span>-o<span class="w"> </span>pyspark_env_3.10.tar.gz
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>遇到报错：
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>CondaPackError:<span class="w"> </span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Files<span class="w"> </span>managed<span class="w"> </span>by<span class="w"> </span>conda<span class="w"> </span>were<span class="w"> </span>found<span class="w"> </span>to<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>deleted/overwritten<span class="w"> </span><span class="k">in</span><span class="w"> </span>the
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>following<span class="w"> </span>packages:
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>-<span class="w"> </span>pip<span class="w"> </span><span class="m">24</span>.2:
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span>lib/python3.1/site-packages/pip-24.2.dist-info/AUTHORS.txt
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span>lib/python3.1/site-packages/pip-24.2.dist-info/INSTALLER
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">    </span>lib/python3.1/site-packages/pip-24.2.dist-info/LICENSE.txt
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">    </span>+<span class="w"> </span><span class="m">437</span><span class="w"> </span>others
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>-<span class="w"> </span>pyspark<span class="w"> </span><span class="m">3</span>.5.1:
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">    </span>lib/python3.1/site-packages/pyspark-3.5.1.dist-info/INSTALLER
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">    </span>lib/python3.1/site-packages/pyspark-3.5.1.dist-info/METADATA
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">    </span>lib/python3.1/site-packages/pyspark-3.5.1.dist-info/RECORD
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">    </span>+<span class="w"> </span><span class="m">765</span><span class="w"> </span>others
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>-<span class="w"> </span>pytz<span class="w"> </span><span class="m">2024</span>.1:
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">    </span>lib/python3.1/site-packages/pytz-2024.1.dist-info/INSTALLER
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">    </span>lib/python3.1/site-packages/pytz-2024.1.dist-info/LICENSE.txt
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">    </span>lib/python3.1/site-packages/pytz-2024.1.dist-info/METADATA
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">    </span>+<span class="w"> </span><span class="m">615</span><span class="w"> </span>others
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>-<span class="w"> </span>python-dateutil<span class="w"> </span><span class="m">2</span>.9.0:
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">    </span>lib/python3.1/site-packages/dateutil/__init__.py
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">    </span>lib/python3.1/site-packages/dateutil/_common.py
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="w">    </span>lib/python3.1/site-packages/dateutil/_version.py
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a><span class="w">    </span>+<span class="w"> </span><span class="m">25</span><span class="w"> </span>others
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>-<span class="w"> </span>python-tzdata<span class="w"> </span><span class="m">2024</span>.1:
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="w">    </span>lib/python3.1/site-packages/tzdata-2024.1.dist-info/INSTALLER
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a><span class="w">    </span>lib/python3.1/site-packages/tzdata-2024.1.dist-info/LICENSE
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a><span class="w">    </span>lib/python3.1/site-packages/tzdata-2024.1.dist-info/LICENSE_APACHE
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a><span class="w">    </span>+<span class="w"> </span><span class="m">632</span><span class="w"> </span>others
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>-<span class="w"> </span>six<span class="w"> </span><span class="m">1</span>.16.0:
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="w">    </span>lib/python3.1/site-packages/six-1.16.0.dist-info/INSTALLER
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a><span class="w">    </span>lib/python3.1/site-packages/six-1.16.0.dist-info/LICENSE
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a><span class="w">    </span>lib/python3.1/site-packages/six-1.16.0.dist-info/METADATA
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a><span class="w">    </span>+<span class="w"> </span><span class="m">6</span><span class="w"> </span>others
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>-<span class="w"> </span>setuptools<span class="w"> </span><span class="m">72</span>.1.0:
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a><span class="w">    </span>lib/python3.1/site-packages/_distutils_hack/__init__.py
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a><span class="w">    </span>lib/python3.1/site-packages/_distutils_hack/override.py
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a><span class="w">    </span>lib/python3.1/site-packages/distutils-precedence.pth
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a><span class="w">    </span>+<span class="w"> </span><span class="m">589</span><span class="w"> </span>others
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>-<span class="w"> </span>py4j<span class="w"> </span><span class="m">0</span>.10.9.7:
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a><span class="w">    </span>lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/INSTALLER
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a><span class="w">    </span>lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/LICENSE.txt
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a><span class="w">    </span>lib/python3.1/site-packages/py4j-0.10.9.7.dist-info/METADATA
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a><span class="w">    </span>+<span class="w"> </span><span class="m">38</span><span class="w"> </span>others
+<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>-<span class="w"> </span>wheel<span class="w"> </span><span class="m">0</span>.44.0:
+<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a><span class="w">    </span>lib/python3.1/site-packages/wheel-0.44.0.dist-info/LICENSE.txt
+<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a><span class="w">    </span>lib/python3.1/site-packages/wheel-0.44.0.dist-info/METADATA
+<a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a><span class="w">    </span>lib/python3.1/site-packages/wheel-0.44.0.dist-info/RECORD
+<a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a><span class="w">    </span>+<span class="w"> </span><span class="m">31</span><span class="w"> </span>others
+<a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>根据：https://stackoverflow.com/questions/69992742/conda-pack-condapackerror-files-managed-by-conda-were
+<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>错误原因可能是因为：镜像试图使用python3.10，而conda-pack将其解析为python3.1。而conda-pack0.7以上版本已经解决了这个bug
+<a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a><span class="c1"># 安装conda-pack0.7以上版本，这里是0.8</span>
+<a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a>conda<span class="w"> </span>install<span class="w"> </span>conda-pack
+<a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a><span class="c1"># 使用conda-pack</span>
+<a id="__codelineno-17-60" name="__codelineno-17-60" href="#__codelineno-17-60"></a>conda-pack<span class="w"> </span>-n<span class="w"> </span>pyspark_env_3.10<span class="w"> </span>-o<span class="w"> </span>pyspark_env_3.10.tar.gz
+<a id="__codelineno-17-61" name="__codelineno-17-61" href="#__codelineno-17-61"></a>
+<a id="__codelineno-17-62" name="__codelineno-17-62" href="#__codelineno-17-62"></a><span class="c1"># 运行spark</span>
+<a id="__codelineno-17-63" name="__codelineno-17-63" href="#__codelineno-17-63"></a>spark-submit<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-64" name="__codelineno-17-64" href="#__codelineno-17-64"></a><span class="w">   </span>--archives<span class="w"> </span>pyspark_env_3.10.tar.gz#pyspark_env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-65" name="__codelineno-17-65" href="#__codelineno-17-65"></a><span class="w">   </span>--master<span class="w"> </span>yarn<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a><span class="w">   </span>--deploy-mode<span class="w"> </span>client<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-67" name="__codelineno-17-67" href="#__codelineno-17-67"></a><span class="w">   </span>--conf<span class="w"> </span>spark.yarn.appMasterEnv.PYSPARK_PYTHON<span class="o">=</span>./pyspark_env/bin/python<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a><span class="w">   </span>--conf<span class="w"> </span>spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON<span class="o">=</span>./pyspark_env/bin/python<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a><span class="w">   </span>--executor-memory<span class="w"> </span>4G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a><span class="w">   </span>--executor-cores<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a><span class="w">   </span>--num-executors<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-72" name="__codelineno-17-72" href="#__codelineno-17-72"></a><span class="w">   </span>--queue<span class="w"> </span>spark<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-73" name="__codelineno-17-73" href="#__codelineno-17-73"></a><span class="w">   </span>spark-3.2.1/job/read_hudi.py
+<a id="__codelineno-17-74" name="__codelineno-17-74" href="#__codelineno-17-74"></a>
+<a id="__codelineno-17-75" name="__codelineno-17-75" href="#__codelineno-17-75"></a><span class="c1"># 也可上传hdfs</span>
+<a id="__codelineno-17-76" name="__codelineno-17-76" href="#__codelineno-17-76"></a>hadoop<span class="w"> </span>fs<span class="w"> </span>-put<span class="w"> </span>pyspark_env_3.10.tar.gz<span class="w"> </span>/spark-jobs/jar
+<a id="__codelineno-17-77" name="__codelineno-17-77" href="#__codelineno-17-77"></a>
+<a id="__codelineno-17-78" name="__codelineno-17-78" href="#__codelineno-17-78"></a>spark-submit<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-79" name="__codelineno-17-79" href="#__codelineno-17-79"></a><span class="w">    </span>--archives<span class="w"> </span>hdfs:///spark-jobs/jar/pyspark_env_3.10.tar.gz#pyspark_env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-80" name="__codelineno-17-80" href="#__codelineno-17-80"></a><span class="w">   </span>--master<span class="w"> </span>yarn<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-81" name="__codelineno-17-81" href="#__codelineno-17-81"></a><span class="w">   </span>--deploy-mode<span class="w"> </span>client<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-82" name="__codelineno-17-82" href="#__codelineno-17-82"></a><span class="w">   </span>--conf<span class="w"> </span>spark.yarn.appMasterEnv.PYSPARK_PYTHON<span class="o">=</span>./pyspark_env/bin/python<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-83" name="__codelineno-17-83" href="#__codelineno-17-83"></a><span class="w">   </span>--conf<span class="w"> </span>spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON<span class="o">=</span>./pyspark_env/bin/python<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-84" name="__codelineno-17-84" href="#__codelineno-17-84"></a><span class="w">   </span>--executor-memory<span class="w"> </span>4G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-85" name="__codelineno-17-85" href="#__codelineno-17-85"></a><span class="w">   </span>--executor-cores<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-86" name="__codelineno-17-86" href="#__codelineno-17-86"></a><span class="w">   </span>--num-executors<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-87" name="__codelineno-17-87" href="#__codelineno-17-87"></a><span class="w">   </span>--queue<span class="w"> </span>spark<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-88" name="__codelineno-17-88" href="#__codelineno-17-88"></a><span class="w">   </span>spark-3.2.1/job/read_hudi.py
+</code></pre></div></p>
+<h2 id="spark">spark常见问题：</h2>
+<h4 id="_8">问题一：</h4>
+<p>日志中出现：org.apache.spark.shuffle.MetadataFetchFailedException: Missing an output location for shuffle 0<br />
+原因分析：<br />
+shuffle分为shuffle write和shuffle read两部分。
+shuffle write的分区数由上一阶段的RDD分区数控制，shuffle read的分区数则是由Spark提供的一些参数控制。
+shuffle write可以简单理解为类似于saveAsLocalDiskFile的操作，将计算的中间结果按某种规则临时放到各个executor所在的本地磁盘上。
+shuffle read的时候数据的分区数则是由spark提供的一些参数控制。可以想到的是，如果这个参数值设置的很小，同时shuffle read的量很大，那么将会导致一个task需要处理的数据非常大。结果导致JVM crash，从而导致取shuffle数据失败，同时executor也丢失了，看到Failed to connect to host的错误，也就是executor lost的意思。有时候即使不会导致JVM crash也会造成长时间的gc。
+解决方案：<br />
+1、减少shuffle数据
+主要从代码层面着手，可以将不必要的数据在shuffle前进行过滤，比如原始数据有20个字段，只要选取需要的字段进行处理即可，将会减少一定的shuffle数据。<br />
+2、修改分区<br />
+通过spark.sql.shuffle.partitions控制分区数，默认为200，根据shuffle的量以及计算的复杂度适当提高这个值，例如500。<br />
+3、增加失败的重试次数和重试的时间间隔<br />
+通过spark.shuffle.io.maxRetries控制重试次数，默认是3，可适当增加，例如10。<br />
+通过spark.shuffle.io.retryWait控制重试的时间间隔，默认是5s，可适当增加，例如10s。<br />
+4、提高executor的内存<br />
+在spark-submit提交任务时，适当提高executor的memory值，例如15G或者20G。</p>
+<h4 id="caused-by-orgapachesparksparkexception-could-not-execute-broadcast-in-300-secs-you-can-increase-the-timeout-for-broadcasts-via-sparksqlbroadcasttimeout-or-disable-broadcast-join-by-setting-sparksqlautobroadcastjointhreshold-to-1">问题二： 日志中出现：Caused by: org.apache.spark.SparkException: Could not execute broadcast in 300 secs. You can increase the timeout for broadcasts via spark.sql.broadcastTimeout or disable broadcast join by setting spark.sql.autoBroadcastJoinThreshold to -1</h4>
+<p>原因分析：
+从上述日志中可以看出在ShuffleMapStage阶段，也就是ShuffleRead阶段，在Driver在向各个Executor广播输入数据时候，出现了超时现象。
+解决方案：  <br />
+1、适当增加超时时间：spark.sql.broadcastTimeout=800<br />
+2、适当增加重试次数：spark.sql.broadcastMaxRetries=3<br />
+3、关闭广播变量join：set spark.sql.autoBroadcastJoinThreshold = -1  </p>
+<h4 id="orgapachesparksqlcatalystparserparseexception">问题三： 日志中出现：org.apache.spark.sql.catalyst.parser.ParseException</h4>
+<p>原因分析：
+spark在做sql转化时报错。<br />
+解决方案：
+检查sql是否书写正确</p>
+<h4 id="sparkexception-could-not-find-coarsegrainedscheduler">问题四： 日志中出现：SparkException: Could not find CoarseGrainedScheduler</h4>
+<p>原因分析：<br />
+这是一个资源问题应该给任务分配更多的cores和executors，并且分配更多的内存。并且需要给RDD分配更多的分区<br />
+解决方案：<br />
+1、调大一下资源和cores和executers的数量<br />
+2、在配置资源中加入这句话也许能解决你的问题：<br />
+–conf spark.dynamicAllocation.enabled=false</p>
+<h4 id="exception-in-thread-main-javalangnosuchmethoderror-scalacollectionimmutablec-o-l-o-n-coloncoloncolontl1lscalacollectionimmutablelist">问题五： 日志中出现：Exception in thread “main” java.lang.NoSuchMethodError: scala.collection.immutable.c o l o n coloncoloncolon.tl$1()Lscala/collection/immutable/List;</h4>
+<p>原因分析：<br />
+scala版本不一致问题<br />
+解决方案：<br />
+1、通过给spark任务指定相同版本的镜像<br />
+–conf spark.kubernetes.container.image=镜像地址</p>
+<h4 id="orgapachesparksparkexception-job-aborted-due-to-stage-failure-total-size-of-serialized-results-of-9478-tasks-10241-mib-is-bigger-than-sparkdrivermaxresultsize-10240-mib">问题六： 日志中出现：org.apache.spark.SparkException: Job aborted due to stage failure: Total size of serialized results of 9478 tasks (1024.1 MiB) is bigger than spark.driver.maxResultSize (1024.0 MiB)</h4>
+<p>原因分析：<br />
+序列化结果集的大小超过了spark任务默认的最大结果集大小（默认spark.driver.maxResultSize为1g）<br />
+解决方案：<br />
+1、增加spark.driver.maxResultSize的大小<br />
+–conf spark.driver.maxResultSize=2g  </p>
+<h4 id="the-executor-with-id-12-exited-with-exit-code-137">问题七： 日志中出现：The executor with id 12 exited with exit code 137</h4>
+<p>原因分析：<br />
+executor内存溢出（oom）<br />
+解决方案：<br />
+1、增加executor内存
+示例参数：–conf spark.executor.memory=10g<br />
+注：少部分情况为堆外内存（overhead memory）不足，需要增加堆外内存<br />
+示例参数：–conf spark.executor.memoryOverhead=5g</p>
+<h4 id="warn-tasksetmanager-lost-task-10-in-stage-00-tid-1-aalocal-executorlostfailure-executor-lost-warn-tasksetmanager-lost-task-692-in-stage-70-tid-1145-19216847217-javaioioexception-connection-from-1921684721755483-closed-javautilconcurrenttimeoutexception-futures-timed-out-after-120-second-error-transportchannelhandler-connection-to-1921684721235409-has-been-quiet-for-120000-ms-while-there-are-outstanding-requests-assuming-connection-is-dead-please-adjust-sparknetworktimeout-if-this-is-wrong">问题八： WARN TaskSetManager: Lost task 1.0 in stage 0.0 (TID 1, aa.local): ExecutorLostFailure (executor lost) WARN TaskSetManager: Lost task 69.2 in stage 7.0 (TID 1145, 192.168.47.217): java.io.IOException: Connection from /192.168.47.217:55483 closed java.util.concurrent.TimeoutException: Futures timed out after [120 second ERROR TransportChannelHandler: Connection to /192.168.47.212:35409 has been quiet for 120000 ms while there are outstanding requests. Assuming connection is dead; please adjust spark.network.timeout if this is wrong</h4>
+<p>原因分析：
+TaskSetManager: Lost task &amp; TimeoutException
+因为网络或者gc的原因,worker或executor没有接收到executor或task的心跳反馈<br />
+解决方案：<br />
+1、提高 spark.network.timeout 的值，根据情况改成300(5min)或更高<br />
+2、配置所有网络传输的延时，如果没有主动设置以下参数，默认覆盖其属性  </p>
+<h4 id="javalangoutofmemoryerror-not-enough-memory-to-build-and-broadcast">问题九： 日志中出现：java.lang.OutOfMemoryError: Not enough memory to build and broadcast</h4>
+<p>原因分析：<br />
+Driver 端OOM。<br />
+Driver 端的 OOM 逃不出 2 类病灶：<br />
+创建的数据集超过内存上限<br />
+收集的结果集超过内存上限<br />
+广播变量在创建的过程中，需要先把分布在所有 Executors 的数据分片拉取到 Driver 端，然后在 Driver 端构建广播变量，最后 Driver 端把封装好的广播变量再分发给各个 Executors。第一步的数据拉取其实就是用 collect 实现的。如果 Executors 中数据分片的总大小超过 Driver 端内存上限也会报 OOM。<br />
+解决方案：<br />
+增加driver端的内存大小</p>
+<h4 id="javalangoutofmemoryerror-java-heap-space-at-javautilarrayscopyof-javalangoutofmemoryerror-java-heap-space-at-javalangreflectarraynewinstance">问题十： java.lang.OutOfMemoryError: Java heap space at java.util.Arrays.copyOf java.lang.OutOfMemoryError: Java heap space at java.lang.reflect.Array.newInstance</h4>
+<p>原因分析：<br />
+executor端OOM
+User Memory 用于存储用户自定义的数据结构，如数组、列表、字典等。因此，如果这些数据结构的总大小超出了 User Memory 内存区域的上限，就会出现这样的报错。</p>
+<h4 id="spark-sql-insert-overwrite">问题十一： spark sql 执行insert overwrite的时候，出现数据重复。</h4>
+<p>原因分析：<br />
+Spark SQL在执行SQL的overwrite的时候并没有删除旧的的数据文件（Spark SQL生成的数据文件），Spark SQL写入Hive的流程如下：</p>
+<p>1.Spark写入Hive会先生成一个临时的_temporary目录用于存储生成的数据文件，全部生成完毕后全部移动到输出目录，然后删除_temporary目录，最后创建Hive元数据（写分区）；<br />
+2.Spark写入数据任务使用了同一个_temporary目录，导致其中一个完成数据生成和移动到Hive路径之后删除_temporary目录失败（任务被kill掉了），进一步导致数据已经到了但是元数据没有创建。<br />
+3.上一个任务虽然生成了数据文件但是没有元数据，则后一个任务的overwrite找不到元数据因此无法删除Hive路径下的数据文件（第二个任务会任务目录下没有数据生成）<br />
+4.当最后一个执行完成的Spark插入任务结束后，此时Hive路径下已经移动过来多个任务的数据文件，由于已经没有正在执行的Spark写任务，因此删除_temporary目录成功，创建元数据成功，结果就是这个元数据对应了该Hive路径下所有版本的数据文件。</p>
+<h4 id="spark105">问题十二： Spark任务正常执行10分钟左右，但是偶尔会出现任务运行时间过长比如5个小时左右</h4>
+<p>原因分析：<br />
+通过spark ui看到spark任务的task运行都是在10分钟左右，有一个task运行时间达到了5.4h一直没有运行完成。<br />
+解决方案：
+设置这个参数spark.speculation=true；<br />
+原理：在Spark中任务会以DAG图的方式并行执行，每个节点都会并行的运行在不同的executor中，但是有的任务可能执行很快，有的任务执行很慢，比如网络抖动、性能不同、数据倾斜等等。有的Task很慢就会成为整个任务的瓶颈，此时可以触发 推测执行 (speculative) 功能，为长时间的task重新启动一个task，哪个先完成就使用哪个的结果，并Kill掉另一个task。</p>
+<h4 id="orgapachesparkshufflefetchfailedexception-the-relative-remote-executorid-21-which-maintains-the-block-data-to-fetch-is-dead">问题十三： org.apache.spark.shuffle.FetchFailedException: The relative remote executor(Id: 21), which maintains the block data to fetch is dead.</h4>
+<p>原因分析：<br />
+资源不足导致executor没有心跳，driver就判定其丢失，就去连其他的executor，但其他的因为配置都一样，所以也连不上。重试n次后，就会报错</p>
+<p>解决方案：<br />
+减少使用触发shuffle的操作，例如reduceByKey，从而减少使用内存<br />
+增大spark.network.timeout，从而允许有更多时间去等待心跳响应<br />
+增加spark.executor.cores，从而减少创建的Executor数量，使得总使用内存减少<br />
+同时增大spark.executor.memory，保证每个Executor有足够的可用内存<br />
+增大spark.shuffle.memoryFraction，默认为0.2(需要spark.memory.useLegacyMode配置为true，适用于1.5或更旧版本，已经deprecated)<br />
+例：<br />
+-conf spark.driver.memory=10g —conf spark.executor.cores=2 --conf spark.executor.memory=24g --conf spark.executor.memoryOverhead=4g --conf spark.default.parallelism=1500 --conf spark.sql.shuffle.partitions=1500 —conf spark.network.timeout=300<br />
+-conf spark.driver.memory=10g -conf spark.executor.cores=2 --conf spark.executor.memory=24g --conf spark.executor. memory开销=4g --conf spark.default.parallelism=1500 --conf spark.sql.shuffle.partitions=1500 -conf spark.network.timeout=300  </p>
+<h4 id="javaioioexception-javaioeofexception-unexpected-end-of-input-stream">问题十四： java.io.IOException: java.io.EOFException: Unexpected end of input stream</h4>
+<p>原因分析：<br />
+spark任务输入数据异常，spark任务读取gz格式压缩的csv文件时，由于存在异常数据发生报错。gz格式压缩的文件存在空数据<br />
+解决方案：<br />
+1.定位到异常数据清除即可<br />
+2.过滤异常数据直接写入  </p>
+<h4 id="exception-in-thread-main-javalangnosuchmethoderror-scalapredefrefarrayopsljavalangobjectljavalangobject">问题十五： Exception in thread “main” java.lang.NoSuchMethodError: scala.Predef$.refArrayOps([Ljava/lang/Object;)[Ljava/lang/Object;</h4>
+<p>原因分析：<br />
+scala版本不一致<br />
+解决方案：<br />
+更换 服务scala版本一致的镜像</p>
+<h4 id="javalangstackoverflowerror-at-orgcodehausjaninocodecontextextract16bitvaluecodecontextjava763-at-orgcodehausjaninocodecontextflowanalysiscodecontextjava600">问题十六： : java.lang.StackOverflowError at org.codehaus.janino.CodeContext.extract16BitValue(CodeContext.java:763) at org.codehaus.janino.CodeContext.flowAnalysis(CodeContext.java:600)</h4>
+<p>原因分析：<br />
+jvm堆栈溢出，一般来说，出现这个错误有可能是因为代码中出现了递归查询或者执行计划DAG太大了，在我的例子中，出现这个问题的原因是我使用for 循环 union了56个df，并且我的sql中有很多like语句的or语句（or的处理是递归，or非常多时，会发生大量的递归），这导致了我的执行计划非常大。
+ 当SparkSQL的sql语句有成百上千的or关键字时，就可能会出现Driver端的JVM栈内存溢出。
+通常的处理方式是将一条sql语句拆分为多条sql语句来执行，每条sql语句尽量保证100个以内的子句，一条sql语句的or关键字控制在100个以内，通常不会导致JVM栈内存溢出。</p>
+<p>解决方案是： 
+1.
+spark.driver.extraJavaOptions<br />
+spark.executor.extraJavaOptions  </p>
+<p>有关与这两个参数的用法可参考：<br />
+https://tsaiprabhanj.medium.com/spark-extrajavaoptions-2d8799ff9181</p>
+<ol>
+<li>根据文章：
+https://botkampa.medium.com/how-to-fix-java-lang-stackoverflow-when-training-your-ml-model-in-spark-d4db3ff6af37<br />
+可以使用checkpoint()或者cache()来减小DAG的大小。<br />
+以下是该文章的解决方法示例：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Confidence Model&quot;</span><span class="p">)</span> \
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># I told spark to use dir called `checkpoint` to </span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># store checkpoints.</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="n">sc</span><span class="o">.</span><span class="n">setCheckpointDir</span><span class="p">(</span><span class="s1">&#39;checkpoint&#39;</span><span class="p">)</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1">#... some other things</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Feature engineering section</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="c1"># assuming lot more features to be computed and added here.</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="c1"># Or there are so many JOINs.</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="n">window</span> <span class="o">=</span> <span class="n">Window</span><span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="n">feature_profile_df</span> <span class="o">=</span> <span class="n">feature_profile_df</span>\
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;crazy_logic_1&quot;</span><span class="p">,</span> <span class="s2">&quot;crazy logics here&quot;</span><span class="p">)</span>\
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;crazy_logic_2&quot;</span><span class="p">,</span> <span class="s2">&quot;crazy logics here&quot;</span><span class="p">)</span>\
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">other_df</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;outer&quot;</span><span class="p">)</span>\
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="c1">#...lots of them coming here</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;crazy_logic_1000&quot;</span><span class="p">,</span> <span class="s2">&quot;crazy logics here&quot;</span><span class="p">)</span>\
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="c1"># I&#39;m sure the DAG size is pretty big now.</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a><span class="c1"># add checkpoint here to consolidate the DAG size in the next step.</span>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a><span class="n">feature_profile_df</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">()</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a><span class="c1"># check the size of DAG</span>
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a><span class="c1"># Use extended=True to appreciate the full length of physical plan</span>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a><span class="n">feature_profile_df</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">extended</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a><span class="c1"># Now you can use the data to train model.</span>
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a><span class="c1"># Without feature_profile_df.checkpoint() in line 22</span>
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a><span class="c1"># this may results in StackOverflow error.</span>
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a><span class="n">model</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">feature_profile_df</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">### This may cause Py4JJavaError: An error occurred while calling o1019.fit.: java.lang.StackOverflowError</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">train_df</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">train_df</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">train_df</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">()</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">train_df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="n">train_df</span><span class="o">.</span><span class="n">show</span><span class="err">（</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="err">，</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="err">，</span><span class="n">vertical</span><span class="o">=</span><span class="kc">True</span><span class="err">）</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="c1">#... many cache() and .checkpoint() thingies in between, but not relevant to train_df at all</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">model_pred</span> <span class="o">=</span> <span class="n">pipeline_pred</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="c1">### However, the problem above can be resolved by just moving</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1">### cache() and show() right before .fit() like this:</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="n">train_df</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="c1">#... many cache() and .checkpoint() thingies in between, but not relevant to train_df at all</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="c1">#...许多cache（）和.checkpoint（）的东西在中间，但与train_df完全无关</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="n">train_df</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="c1"># Note that .checkpoint() is not even used here:</span>
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a><span class="n">train_df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+同时，文章指出把df转为rdd在转为df也是一种可以有效减少DAG的方法
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">train_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">train_df</span><span class="o">.</span><span class="n">rdd</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">train_df</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+</code></pre></div></li>
+</ol>
+<h4 id="error-codegenerator-failed-to-compile-orgcodehausjaninointernalcompilerexception-compiling-generatedclass-in-generatedjava-code-of-method-processnextv-of-class-orgapachesparksqlcatalystexpressionsgeneratedclassgeneratediteratorforcodegenstage1-grows-beyond-64-kb">问题十七：  ERROR CodeGenerator: failed to compile: org.codehaus.janino.InternalCompilerException: Compiling "GeneratedClass" in "generated.java": Code of method "processNext()V" of class "org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1" grows beyond 64 KB</h4>
+<p>原因分析：<br />
+此问题伴随着问题十六一起出现，原因在于使用Catalyst从使用DataFrame和Dataset的程序生成Java程序编译成Java字节码时，一个方法的字节码大小不能超过64 KB，这与Java类文件的限制相冲突。<br />
+解决方案为：<br />
+spark.sql.codegen.wholeStage= "false"<br />
+来源与：https://stackoverflow.com/questions/50891509/apache-spark-codegen-stage-grows-beyond-64-kb</p>
+<h4 id="spark-web-uilocality_level">问题十八： 关于spark web ui上的Locality_level:</h4>
+<p>PROCESS_LOCAL 进程本地化，表示 task 要计算的数据在同一个 Executor 中。  </p>
+<p>NODE_LOCAL 节点本地化，速度稍慢，因为数据需要在不同的进程之间传递或从文件中读取。分为两种情况，第一种：task 要计算的数据是在同一个 worker 的不同 Executor 进程中。第二种：task 要计算的数据是在同一个 worker 的磁盘上，或在 HDFS 上恰好有 block 在同一个节点上。如果 Spark 要计算的数据来源于 HDFSD 上，那么最好的本地化级别就是 NODE_LOCAL。  </p>
+<p>NO_PREF 没有最佳位置，数据从哪访问都一样快，不需要位置优先。比如 Spark SQL 从 Mysql 中读取数据。  </p>
+<p>RACK_LOCAL 机架本地化，数据在同一机架的不同节点上。需要通过网络传输数据以及文件 IO，比 NODE_LOCAL 慢。情况一：task 计算的数据在 worker2 的 EXecutor 中。情况二：task 计算的数据在 work2 的磁盘上。  </p>
+<p>ANY 跨机架，数据在非同一机架的网络上，速度最慢。  </p>
+<p>可以通过设置spark.locality.wait增加等待时间，默认是3S。</p>
+<h4 id="dfshow">问题十九： df.show()显示不完整</h4>
+<p>解决方案：<br />
+使用 df.show(truncate=False) 来关闭值的截断行为，从而显示完整的值。但是需要注意,如果值实在太长,终端可能无法完整显示。  </p>
+<p>使用 df.show(truncate=False, vertical=True) 可以垂直显示 DataFrame,每行显示一个值。这种方式更适合显示超长字符串。  </p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../git/" class="md-footer__link md-footer__link--prev" aria-label="上一页: git">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                git
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../pandas%20vs%20pyspark/" class="md-footer__link md-footer__link--next" aria-label="下一页: pandas vs pyspark">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                pandas vs pyspark
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 wwl
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Klring/wwlblog" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="UID:1477654456" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480v-83.6c0-4 1.5-7.8 4.2-10.8l167.6-182.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8l-88.3-44.2C7.1 311.3.3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.action.edit", "navigation.tracking", "navigation.tabs", "navigation.footer", "navigation.sections", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+<script>
+window.embeddedChatbotConfig = {
+chatbotId: "CGbB9xUzwRmM3FK148niF",
+domain: "www.chatbase.co"
+}
+</script>
+<script
+src="https://www.chatbase.co/embed.min.js"
+chatbotId="CGbB9xUzwRmM3FK148niF"
+domain="www.chatbase.co"
+defer>
+</script>
+
+  </body>
+</html>

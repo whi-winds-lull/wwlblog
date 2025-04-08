@@ -1,0 +1,2170 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="个人分享、记录">
+      
+      
+        <meta name="author" content="wwl">
+      
+      
+        <link rel="canonical" href="https://whi-winds-lull.github.io/wwlblog/bigdata/es/">
+      
+      
+        <link rel="prev" href="../kafka/">
+      
+      
+        <link rel="next" href="../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%A1%86%E6%9E%B6%E5%91%BD%E4%BB%A4/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>es - Wblog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC+-+local:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC - local";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-N2KX18D54W"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-N2KX18D54W",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-N2KX18D54W",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+<link rel="stylesheet" href="../../assets/stylesheets/custom.00c04c01.min.css">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#es" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Wblog" class="md-header__button md-logo" aria-label="Wblog" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wblog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              es
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="切换至夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/whi-winds-lull/wwlblog" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    whi-winds-lull
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  主页
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  心情
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Wblog" class="md-nav__button md-logo" aria-label="Wblog" data-md-component="logo">
+      
+  <img src="../../assets/images/favicon.png" alt="logo">
+
+    </a>
+    Wblog
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/whi-winds-lull/wwlblog" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    whi-winds-lull
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    主页
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            主页
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    开发
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            开发
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Flink
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hudi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    hudi
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pyspark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pandas%20vs%20pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pandas vs pyspark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kafka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kafka
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    es
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    es
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#textkeyword" class="md-nav__link">
+    <span class="md-ellipsis">
+      类型text与keyword
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#term" class="md-nav__link">
+    <span class="md-ellipsis">
+      term查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      bool查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#range" class="md-nav__link">
+    <span class="md-ellipsis">
+      range查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fuzzy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fuzzy查询
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fuzzy查询">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuzzy_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      fuzzy 查询的常见参数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzy_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      关于fuzzy查询的疑问
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wildcard" class="md-nav__link">
+    <span class="md-ellipsis">
+      wildcard查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regexp" class="md-nav__link">
+    <span class="md-ellipsis">
+      regexp查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match_phrase" class="md-nav__link">
+    <span class="md-ellipsis">
+      match_phrase查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#es_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些es的疑问
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一些es的疑问">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#termfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      term和filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#painless" class="md-nav__link">
+    <span class="md-ellipsis">
+      Painless
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      查询时间
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tokenizer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    <span class="md-ellipsis">
+      对text类型数据进行全匹配
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      template的使用
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%A1%86%E6%9E%B6%E5%91%BD%E4%BB%A4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    大数据框架命令
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85Python3%E7%8E%AF%E5%A2%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    [Linux系统安装高版本Python3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pg%E5%AE%89%E8%A3%85%E6%80%BB%E7%BB%93/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pg安装
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curl%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Curl源码安装报错解决
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FLINK%E7%9B%91%E6%8E%A7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FLINK监控
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SSH%E5%85%8D%E5%AF%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSH免密
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    数据挖掘
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%87%E7%BA%A7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    hadoop升级
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Hudi%E5%90%88%E5%B9%B6%E5%B0%8F%E6%96%87%E4%BB%B6%E6%96%B9%E6%A1%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hudi合并小文件方案
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clickhouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    clickhouse指南
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_19" id="__nav_2_19_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    分享
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_19">
+            <span class="md-nav__icon md-icon"></span>
+            分享
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../share/recommend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    分享一些好用的网站
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    心情
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            心情
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/cat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cat
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Search
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#textkeyword" class="md-nav__link">
+    <span class="md-ellipsis">
+      类型text与keyword
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#term" class="md-nav__link">
+    <span class="md-ellipsis">
+      term查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      bool查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#range" class="md-nav__link">
+    <span class="md-ellipsis">
+      range查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fuzzy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fuzzy查询
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fuzzy查询">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fuzzy_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      fuzzy 查询的常见参数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzy_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      关于fuzzy查询的疑问
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wildcard" class="md-nav__link">
+    <span class="md-ellipsis">
+      wildcard查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regexp" class="md-nav__link">
+    <span class="md-ellipsis">
+      regexp查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match_phrase" class="md-nav__link">
+    <span class="md-ellipsis">
+      match_phrase查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#es_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      一些es的疑问
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一些es的疑问">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#termfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      term和filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#painless" class="md-nav__link">
+    <span class="md-ellipsis">
+      Painless
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      查询时间
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tokenizer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    <span class="md-ellipsis">
+      对text类型数据进行全匹配
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      template的使用
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/whi-winds-lull/wwlblog/edit/main/docs/bigdata/es.md" title="编辑此页" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="es">es</h1>
+<h2 id="textkeyword">类型text与keyword</h2>
+<p>text类型的数据被用来索引长文本，例如电子邮件主体部分或者一款产品的介绍，这些文本会被分析，在建立索引文档之前会被分词器进行分词，转化为词组。经过分词机制之后es允许检索到该文本切分而成的词语，但是text类型的数据不能用来过滤、排序和聚合等操作。
+keyword类型的数据可以满足电子邮箱地址、主机名、状态码、邮政编码和标签等数据的要求，不进行分词，常常被用来过滤、排序和聚合。
+总结：keyword：存储数据时候，不会分词建立索引，
+    text：存储数据时候，会自动分词，并生成索引。</p>
+<h2 id="match">match查询</h2>
+<p>用于在文本字段中查找匹配的词语。match查询会对text类型字段进行分词
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>GET /xxx/_search
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>{
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    &quot;match&quot;: {
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      &quot;address&quot;: &quot;北京&quot;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    }
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  }
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>}
+</code></pre></div></p>
+<h2 id="term">term查询</h2>
+<p>用于精确匹配字段中的值。一般用于keyword
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>GET /xxx/_search
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    &quot;term&quot;: {
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>      &quot;category1_new&quot;: &quot;士多&quot;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    }
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  }
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>}
+</code></pre></div></p>
+<h2 id="bool">bool查询</h2>
+<p>用于组合多个查询条件，支持must、should、must_not等关键词。
+must: 文档必须完全匹配条件
+should: should下面会带一个以上的条件，至少满足一个条件，这个文档就符合should
+must_not: 文档必须不匹配条件
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GET /xxx/_search
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>{
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    &quot;bool&quot;: {
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>      &quot;must&quot;: [
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        { &quot;match&quot;: { &quot;state&quot;: &quot;北京&quot; } },
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        { &quot;term&quot;: {  &quot;category1_new&quot;: &quot;士多&quot;} }
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>      ]
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    }
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  }
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>}
+</code></pre></div></p>
+<h2 id="range">range查询</h2>
+<p>用于查找某个字段在指定范围内的文档。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>GET /xxx/_search
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>{
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    &quot;range&quot;: {
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      &quot;price&quot;: {
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        &quot;gte&quot;: 100,
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        &quot;lte&quot;: 500
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      }
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    }
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  }
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>}
+</code></pre></div></p>
+<h2 id="fuzzy">Fuzzy查询</h2>
+<p>"Fuzzy"查询是Elasticsearch中的一种模糊匹配查询，它允许你查找与指定词语相似的文档。模糊匹配非常有用，特别是在处理拼写错误、文本数据包含打字错误或近义词时。它基于编辑距离来匹配，可以处理拼写错误或近义词。查询的主要目标是通过容忍一定数量的字符编辑操作来查找相似的词语，而不仅仅是精确匹配。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GET /xxx/_search
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>{
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    &quot;fuzzy&quot;: {
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      &quot;channeltype_new&quot;: &quot;传统渠&quot;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    }
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  }
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>}
+</code></pre></div></p>
+<h3 id="fuzzy_1">fuzzy 查询的常见参数</h3>
+<ol>
+<li>
+<p>value（必填）</p>
+</li>
+<li>
+<p>用于指定要进行模糊匹配的值，通常是你要查找的单词或短语。  </p>
+</li>
+<li>例如，"value": "searh" 进行对 search 的模糊查询。</li>
+<li>fuzziness（可选）  </li>
+<li>控制编辑距离，即允许多少个字符插入、删除或替换。可以是：<br />
+数字（例如：fuzziness: 2）：指定最大允许的编辑距离。<br />
+AUTO：基于搜索词的长度自动计算允许的编辑距离。通常短词（如2个字母）使用较小的距离，而较长的词则允许更大的编辑距离。</li>
+<li>例如，"fuzziness": 2 表示允许两个字符的差异。</li>
+<li>prefix_length（可选）  </li>
+<li>用于定义在开始时不允许有任何变化的字符数。通过这个参数，可以在实际计算模糊查询前忽略文本的前缀部分，优化查询性能。</li>
+<li>例如，"prefix_length": 2 表示查询词的前两个字符不会受到模糊化的影响。</li>
+<li>max_expansions（可选）  </li>
+<li>限制可以生成的模糊变体的最大数量。如果设置了较大的 fuzziness 值，可能会导致查询生成大量变体，max_expansions 可用于控制这一点，避免性能下降。</li>
+<li>例如，"max_expansions": 50 表示最多生成50个变体。</li>
+<li>transpositions（可选）</li>
+<li>是否允许字符位置的交换。默认情况下，字符交换不被认为是有效的变体（即 "ab" 不等于 "ba"）。如果设置为 true，则允许字符位置交换。</li>
+<li>例如，"transpositions": true 允许字符交换。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">POST</span><span class="w"> </span><span class="err">/your_i</span><span class="kc">n</span><span class="err">dex/_search</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;fuzzy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">&quot;your_field&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;searh&quot;</span><span class="p">,</span><span class="w">        </span><span class="c1">// 要匹配的词</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="nt">&quot;fuzziness&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AUTO&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">// 自动设置模糊度</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="nt">&quot;prefix_length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">     </span><span class="c1">// 前2个字符不变</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="nt">&quot;max_expansions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">   </span><span class="c1">// 允许的最大变体数</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">}</span>
+</code></pre></div></li>
+</ol>
+<h3 id="fuzzy_2">关于fuzzy查询的疑问</h3>
+<p>背景：使用fuzzy查询查询某个店铺时，发现使用<strong>百兴隆</strong>能够查询出<strong>百兴隆超市(天雅居教师小区西)</strong>的数据，但是使用<strong>百兴隆超市</strong>查询不出数据，当前使用的分词器为ik_smart分词器。<br />
+分析：<br />
+百兴隆超市(天雅居教师小区西)分词后的结果为：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;百&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TYPE_CNUM&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;兴隆&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_WORD&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;超市&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_WORD&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;天&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_CHAR&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;雅&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_CHAR&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;居&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_CHAR&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;教师&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_WORD&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span>
+<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;小区&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span>
+<a id="__codelineno-6-56" name="__codelineno-6-56" href="#__codelineno-6-56"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_WORD&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-57" name="__codelineno-6-57" href="#__codelineno-6-57"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+<a id="__codelineno-6-58" name="__codelineno-6-58" href="#__codelineno-6-58"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-59" name="__codelineno-6-59" href="#__codelineno-6-59"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-60" name="__codelineno-6-60" href="#__codelineno-6-60"></a><span class="w">      </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;西&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-61" name="__codelineno-6-61" href="#__codelineno-6-61"></a><span class="w">      </span><span class="nt">&quot;start_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span>
+<a id="__codelineno-6-62" name="__codelineno-6-62" href="#__codelineno-6-62"></a><span class="w">      </span><span class="nt">&quot;end_offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+<a id="__codelineno-6-63" name="__codelineno-6-63" href="#__codelineno-6-63"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CN_CHAR&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-64" name="__codelineno-6-64" href="#__codelineno-6-64"></a><span class="w">      </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
+<a id="__codelineno-6-65" name="__codelineno-6-65" href="#__codelineno-6-65"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-66" name="__codelineno-6-66" href="#__codelineno-6-66"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-6-67" name="__codelineno-6-67" href="#__codelineno-6-67"></a><span class="p">}</span>
+</code></pre></div>
+使用百兴隆查询时，是使用<strong>百兴隆(不分词)</strong>的结果和<strong>百兴隆超市(天雅居教师小区西)</strong>分词后的token进行编辑距离计算的。<br />
+所以查询<strong>百兴隆</strong>和<strong>兴隆</strong>的编辑距离为1，能够查询出结果，而使用<strong>百兴隆超市</strong>查询时，无论是<strong>兴隆</strong>或者是<strong>超市</strong>的编辑距离都大于2(可设置的最大距离)，所以查询不出结果。</p>
+<h2 id="wildcard">wildcard查询</h2>
+<p>支持通配符匹配。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>GET /xxx/_search
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>{
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    &quot;wildcard&quot;: {
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      &quot;title&quot;: &quot;elasticsearch*&quot;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    }
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  }
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>}
+</code></pre></div></p>
+<h2 id="regexp">regexp查询</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>GET /xxx/_search
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>{
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    &quot;regexp&quot;: {
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>      &quot;title&quot;: &quot;elast[a-z]*ch&quot;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    }
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  }
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>}
+</code></pre></div>
+<h2 id="match_phrase">match_phrase查询</h2>
+<p>要求查询的词语在文档中以相同的顺序相邻出现。
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>GET /xxx/_search
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>{
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    &quot;match_phrase&quot;: {
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>      &quot;description&quot;: &quot;distributed search&quot;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    }
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  }
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>}
+</code></pre></div></p>
+<h2 id="es_1">一些es的疑问</h2>
+<h3 id="termfilter">term和filter</h3>
+<p>最近在用es做项目，其中使用到了term和filter，使用的语句为：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>{
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    &quot;query&quot;: {
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        &quot;term&quot;: {
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>            &quot;tenant_code&quot;: XXX
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        }
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    }
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>}
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>{
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    &quot;query&quot;: {
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        &quot;bool&quot;: {
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            &quot;filter&quot;: {
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>                &quot;term&quot;: {
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>                    &quot;tenant_code&quot;: XXX
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                }
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>            }
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>        }
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    }
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>}
+</code></pre></div>
+这两个语句出来的数据是一样的，但是max_score在上面的为1，在下面的为0。查询资料后发现：
+term查询是一种精确匹配查询，它要求文档中的字段值与指定的值完全相等。当使用term查询时，Elasticsearch会计算文档与查询条件的匹配度，如果字段值与查询条件完全匹配，它会返回1，否则返回0。因为term查询是精确匹配，所以当有匹配时，max_score为1。</p>
+<p>bool查询是一个更通用的查询类型，允许您组合多个条件，包括过滤条件。在您的示例中，bool查询的filter子句仅包含一个term查询条件，用于过滤文档。虽然这个条件可能与term查询一样精确，但是bool查询不涉及评分，因为它只是用于过滤文档的。因此，bool查询的max_score通常是0，因为它不计算文档与查询条件的匹配度。</p>
+<p>总结：term查询返回1或0，表示完全匹配或不匹配，而bool查询的filter子句通常返回0，因为它只是用于过滤文档的，不涉及评分。如果您只关心过滤结果而不关心评分，那么使用bool查询的filter子句通常更合适。</p>
+<h3 id="painless">Painless</h3>
+<p>Painless 是 Elasticsearch 中的一种脚本语言，用于执行查询、聚合和转换数据。它是一种轻量级的脚本语言，专门设计用于 Elasticsearch 中的高性能脚本执行。Painless 语言的目标是提供一种安全且高效的方式来编写和执行 Elasticsearch 查询和聚合中的自定义脚本逻辑。
+使用方式为：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&quot;script&quot;: {
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    &quot;source&quot;: &quot;&quot;&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>                if (ctx._source.containsKey(&#39;XXXX&#39;)) {
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>                    if (ctx._source.XXXX == null) {
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>                        ctx._source.XXXX = [params.XXXX]
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>                    } else {
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>                        boolean exists = false;
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>                        for (item in ctx._source.XXXX) {
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                            if (item.XXXX == params.XXXX.XXXX &amp;&amp; item.XXXX == params.XXXX.XXXX) {
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                                exists = true;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>                                break;
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                            }
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>                        }
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>                        if (!exists) {
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                            ctx._source.XXXX.add(params.XXXX)
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                        }
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                    }
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>                } else {
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>                    ctx._source.XXXX = [params.XXXX]
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>                }
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>            &quot;&quot;&quot;,
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    &quot;lang&quot;: &quot;painless&quot;,
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    &quot;params&quot;: {
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>        &quot;XXXX&quot;: {
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>            &quot;XXXX&quot;: doc[&#39;XXXX&#39;],
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>            &quot;XXXX&quot;: doc[&#39;XXXX&#39;]
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>        }
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>    }
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>}
+</code></pre></div></p>
+<h3 id="_1">查询时间</h3>
+<p>之前新建索引的时间字段，类型一般为date，但是某次没注意用的是keyword类型，在使用范围查询的时候发现查出来的数据不对，查了资料后发现：
+如果是date类型，可正常查询，如果是keyword类型，需要在字段后面添加.keyword后才能正常查询，示例：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>一、date
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>&quot;insert_time&quot;:{
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  &quot;type&quot;: &quot;date&quot;,
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  &quot;format&quot; : &quot;yyyy-MM-dd HH:mm:ss&quot;
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>}
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>&quot;query&quot;: {
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    &quot;bool&quot;: {
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        &quot;must&quot;: [
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>            {
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>                &quot;range&quot;: {
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>                    &quot;insert_time&quot;: {
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>                        &quot;gt&quot;: last_insert_time
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>                    }
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>                }
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>            },
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>            {
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>                &quot;term&quot;: {
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>                    &quot;xxx&quot;: xxx
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>                }
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>            }
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>        ]
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    }
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>}
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>}
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>二、keywrod
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>&quot;query&quot;: {
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    &quot;bool&quot;: {
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        &quot;must&quot;: [
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>            {
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>                &quot;range&quot;: {
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>                    &quot;insert_time.keyword&quot;: {
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>                        &quot;gt&quot;: last_insert_time
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>                    }
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>                }
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>            },
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>            {
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>                &quot;term&quot;: {
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>                    &quot;xxx&quot;: xxx
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>                }
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>            }
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>        ]
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>    }
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>}
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>}
+</code></pre></div></p>
+<h3 id="tokenizer">Tokenizer</h3>
+<p>es的默认Tokenizer是standard，可通过以下语句查看分词:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>GET /_analyze
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>{
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  &quot;text&quot;: &quot;A Quick Brown Fox&quot;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>}
+</code></pre></div>
+Elasticsearch 提供了多种内置的 Tokenizer，以下是一些常用的 Tokenizer：</p>
+<p>standard：基于 Unicode 文本分割算法的语法分词器，可以用于大多数语言。它会在大多数标点符号处分割文本，但不会移除标点符号。它是 Elasticsearch 的默认分词器。</p>
+<p>letter：在遇到非字母字符时分割文本。</p>
+<p>lowercase：和 letter 分词器类似，但会将所有词项转换为小写。</p>
+<p>whitespace：在遇到任何空白字符时分割文本。</p>
+<p>uax_url_email：和 standard 分词器类似，但会将 URL 和电子邮件地址识别为单个词项。</p>
+<p>classic：一种基于英语语法的分词器。</p>
+<p>ngram：将文本或单词分解为小片段，用于部分单词匹配。</p>
+<p>edge_ngram：这个分词器也会将文本或单词分解为小片段，但只返回与词的开头锚定的 n-gram。</p>
+<p>ngram配置示例：
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>PUT my-index-000001
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>{
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  &quot;settings&quot;: {
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    &quot;analysis&quot;: {
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>      &quot;analyzer&quot;: {
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        &quot;my_analyzer&quot;: {
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>          &quot;tokenizer&quot;: &quot;my_tokenizer&quot;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        }
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>      },
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>      &quot;tokenizer&quot;: {
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        &quot;my_tokenizer&quot;: {
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>          &quot;type&quot;: &quot;ngram&quot;,
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>          &quot;min_gram&quot;: 3,
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>          &quot;max_gram&quot;: 3,
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>          &quot;token_chars&quot;: [
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>            &quot;letter&quot;,
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>            &quot;digit&quot;
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>          ]
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>        }
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>      }
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>    }
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>  }
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>}
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>POST my-index-000001/_analyze
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>{
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>  &quot;analyzer&quot;: &quot;my_analyzer&quot;,
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>  &quot;text&quot;: &quot;2 Quick Foxes.&quot;
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>}
+</code></pre></div></p>
+<h3 id="text">对text类型数据进行全匹配</h3>
+<p>在建索引的时候使用"fields": {"keyword": {"type": "keyword"}}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>GET /xxx/_search
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>{
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  &quot;query&quot;: {
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    &quot;term&quot;: {
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>      &quot;xx.keyword&quot;: &quot;士多&quot;
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    }
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  }
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>}
+</code></pre></div></p>
+<h3 id="template">template的使用</h3>
+<p>_template 是用来定义索引模板的工具。索引模板可以帮助你在创建索引时自动应用一些配置，比如映射（mappings）、设置（settings）和别名（aliases），从而简化和规范索引的创建过程。<br />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a># 创建模板
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>PUT _template/my_template
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>{
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  &quot;index_patterns&quot;: [&quot;test-*&quot;],
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  &quot;settings&quot;: {
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    &quot;number_of_shards&quot;: 1,
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    &quot;number_of_replicas&quot;: 0
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  },
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  &quot;mappings&quot;: {
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    &quot;properties&quot;: {
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>      &quot;timestamp&quot;: {
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>        &quot;type&quot;: &quot;date&quot;
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>      },
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>      &quot;message&quot;: {
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>        &quot;type&quot;: &quot;text&quot;
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>      },
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>      &quot;user_id&quot;: {
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>        &quot;type&quot;: &quot;keyword&quot;
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>      }
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>    }
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>  },
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>  &quot;aliases&quot;: {
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>    &quot;logs_alias&quot;: {}
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>  }
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>}
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a># 创建索引
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>PUT test-2024-07-16
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a># 查看
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>GET test-2024-07-16/_mapping
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../kafka/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Kafka">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                Kafka
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%A1%86%E6%9E%B6%E5%91%BD%E4%BB%A4/" class="md-footer__link md-footer__link--next" aria-label="下一页: 大数据框架命令">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                大数据框架命令
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 wwl
+    </div>
+  
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Klring/wwlblog" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="UID:1477654456" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480v-83.6c0-4 1.5-7.8 4.2-10.8l167.6-182.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8l-88.3-44.2C7.1 311.3.3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.action.edit", "navigation.tracking", "navigation.tabs", "navigation.footer", "navigation.sections", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+<script>
+window.embeddedChatbotConfig = {
+chatbotId: "CGbB9xUzwRmM3FK148niF",
+domain: "www.chatbase.co"
+}
+</script>
+<script
+src="https://www.chatbase.co/embed.min.js"
+chatbotId="CGbB9xUzwRmM3FK148niF"
+domain="www.chatbase.co"
+defer>
+</script>
+
+  </body>
+</html>
